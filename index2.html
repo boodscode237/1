@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Подготовка к контрольной: Русский Язык (НСР)</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Font Awesome for Icons (No SVG tags) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+
+        /* Chart Container Styling - Critical for Responsiveness */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; /* Mobile base */
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+
+        /* Card Hover Effects */
+        .interactive-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .interactive-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Fade Animation */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    <!-- Chosen Palette: "Academic Blue" - Slate background with Indigo/Blue accents for a focused, professional learning environment. -->
+    <!-- Application Structure Plan: Dashboard with 4 distinct tabs corresponding to the report topics. Focus on "Transformation" logic for grammar and "Structure" for abstracts. -->
+    <!-- Visualization & Content Choices: 
+         1. Bar Chart for Part of Speech frequency (Visualizing "Nominal Character").
+         2. Interactive List for Conditional Sentences (Click-to-reveal transformation).
+         3. Step Process for Abstracting.
+         4. Interactive Document Structure for Cliches.
+         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased h-screen flex flex-col overflow-hidden">
+
+    <!-- Navbar -->
+    <nav class="bg-white border-b border-slate-200 shadow-sm z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <i class="fa-solid fa-graduation-cap text-indigo-600 text-2xl mr-3"></i>
+                    <span class="font-bold text-xl tracking-tight text-slate-900">Ревизор НСР</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-slate-500 hidden sm:block">Время подготовки: ~1 час</span>
+                    <button id="resetBtn" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                        <i class="fa-solid fa-rotate-right mr-1"></i> Сброс
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Layout -->
+    <div class="flex flex-1 overflow-hidden">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="w-64 bg-white border-r border-slate-200 hidden md:flex flex-col overflow-y-auto">
+            <div class="p-4">
+                <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">Темы Контрольной</h3>
+                <nav class="space-y-2" id="desktopNav">
+                    <!-- Nav items injected by JS -->
+                </nav>
+            </div>
+            <div class="mt-auto p-4 border-t border-slate-100">
+                <div class="bg-indigo-50 rounded-lg p-4">
+                    <h4 class="text-sm font-bold text-indigo-800 mb-2">Совет:</h4>
+                    <p class="text-xs text-indigo-600" id="sidebarTip">Изучите клише для введения и заключения реферата.</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Mobile Navigation (Bottom Bar) -->
+        <div class="md:hidden fixed bottom-0 w-full bg-white border-t border-slate-200 z-50 flex justify-around p-2" id="mobileNav">
+            <!-- Mobile nav items injected by JS -->
+        </div>
+
+        <!-- Main View Area -->
+        <main class="flex-1 overflow-y-auto bg-slate-50 p-4 md:p-8 pb-20 md:pb-8 relative" id="mainContent">
+            <!-- Content views injected by JS -->
+        </main>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Source (Based on the provided Report) ---
+        const appData = {
+            topics: [
+                {
+                    id: 'grammar',
+                    title: '1. Вопросный план и Части речи',
+                    icon: 'fa-spell-check',
+                    intro: 'Научный стиль речи (НСР) имеет «именной» характер. Здесь мы разберем особенности вопросного плана и использования существительных, глаголов и причастий.',
+                    content: {
+                        plan: {
+                            title: "Вопросный план",
+                            desc: "План в форме вопросов к смысловым частям текста.",
+                            rules: [
+                                "Используйте вопросительные слова: Как? Почему? Что?",
+                                "Избегайте частицы «ли» (Пример: Неверно — «Есть ли...?»).",
+                                "Один вопрос на одну микротему."
+                            ],
+                            example: {
+                                text: "Робототехника — это прикладная наука, занимающаяся разработкой автоматизированных технических систем.",
+                                result: "Что такое робототехника?"
+                            }
+                        },
+                        grammar: {
+                            title: "Части речи в НСР",
+                            features: [
+                                { type: "Существительные", desc: "Преобладают над глаголами. Часто используются цепочки в Родительном падеже.", ex: "Автоматизация (чего?) процессов (чего?) обработки." },
+                                { type: "Глаголы", desc: "Чаще всего НСВ (несовершенный вид), наст. время, значение «всегда/постоянно».", ex: "Вода кипит при 100 градусах." },
+                                { type: "Причастия", desc: "Активно используются для определений.", ex: "Студент, выполняющий (действ.) / Задание, выполняемое (страд.)." }
+                            ]
+                        }
+                    }
+                },
+                {
+                    id: 'syntax',
+                    title: '2. Условие и Назывной план',
+                    icon: 'fa-diagram-project',
+                    intro: 'Научный текст требует точности. Узнайте, как трансформировать сложные предложения с условием в простые и как составлять назывной план.',
+                    content: {
+                        nominalPlan: {
+                            title: "Назывной план",
+                            desc: "План, состоящий из назывных (номинативных) предложений. Глаголы не используются.",
+                            features: ["Только подлежащее и его группа", "Обычно 2–4 слова", "Фиксирует информативные центры"]
+                        },
+                        conditionals: [
+                            { complex: "Если нагреть воду до 100 градусов, она закипит.", simple: "При нагревании воды до 100 градусов она закипит." },
+                            { complex: "Если есть ошибки, программа не запустится.", simple: "При наличии ошибок программа не запустится." },
+                            { complex: "Если использовать этот метод...", simple: "Используя этот метод... (или При использовании этого метода)" }
+                        ]
+                    }
+                },
+                {
+                    id: 'abstracting',
+                    title: '3. Реферирование',
+                    icon: 'fa-file-pen',
+                    intro: 'Аналитическая переработка информации — это сжатие текста. Разберем этапы создания реферата и его виды.',
+                    content: {
+                        process: [
+                            { step: "1. Чтение", detail: "Полный анализ первоисточника." },
+                            { step: "2. Компрессия", detail: "Отделение главного от второстепенного. Удаление повторов." },
+                            { step: "3. Обобщение", detail: "Соединение фактов в логическое целое." },
+                            { step: "4. Перефразирование", detail: "Использование клише научного стиля (Автор отмечает...)." }
+                        ],
+                        types: ["Информативные (Реферат-конспект)", "Индикативные (Реферат-резюме)"]
+                    }
+                },
+                {
+                    id: 'structure',
+                    title: '4. Структура и Клише',
+                    icon: 'fa-layer-group',
+                    intro: 'Правильная структура и использование клише — залог успешного реферата. Изучите модель реферата и правила оформления.',
+                    content: {
+                        sections: [
+                            { name: "Введение", cliches: ["Статья посвящена (чему?)...", "Актуальность темы заключается в...", "Целью работы является..."] },
+                            { name: "Основная часть", cliches: ["Автор отмечает, что...", "Далее рассматривается...", "Особое внимание уделяется..."] },
+                            { name: "Заключение", cliches: ["В заключение делается вывод...", "Автор приходит к выводу, что...", "Безусловной заслугой автора является..."] }
+                        ],
+                        duplicateInfo: {
+                            title: "Дублирующая информация",
+                            desc: "Повторение информации другими словами. В реферате обычно сокращается, но синонимы оставляют для связности.",
+                            example: "Информатика, или наука о способах обработки информации -> Информатика"
+                        }
+                    }
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let currentState = {
+            activeTab: 'grammar'
+        };
+
+        // --- Core Functions ---
+
+        function init() {
+            renderNav();
+            loadView(currentState.activeTab);
+            
+            document.getElementById('resetBtn').addEventListener('click', () => {
+                loadView('grammar');
+            });
+        }
+
+        function renderNav() {
+            const desktopNav = document.getElementById('desktopNav');
+            const mobileNav = document.getElementById('mobileNav');
+            
+            desktopNav.innerHTML = '';
+            mobileNav.innerHTML = '';
+
+            appData.topics.forEach(topic => {
+                // Desktop
+                const dBtn = document.createElement('button');
+                dBtn.className = `w-full flex items-center p-3 rounded-lg text-sm font-medium transition-colors mb-1 ${currentState.activeTab === topic.id ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50'}`;
+                dBtn.onclick = () => loadView(topic.id);
+                dBtn.innerHTML = `<i class="fa-solid ${topic.icon} w-6"></i> ${topic.title}`;
+                desktopNav.appendChild(dBtn);
+
+                // Mobile
+                const mBtn = document.createElement('button');
+                mBtn.className = `flex flex-col items-center p-2 text-xs ${currentState.activeTab === topic.id ? 'text-indigo-600' : 'text-slate-500'}`;
+                mBtn.onclick = () => loadView(topic.id);
+                mBtn.innerHTML = `<i class="fa-solid ${topic.icon} text-lg mb-1"></i>`;
+                mobileNav.appendChild(mBtn);
+            });
+        }
+
+        function loadView(tabId) {
+            currentState.activeTab = tabId;
+            renderNav(); // Update active states
+            
+            const contentDiv = document.getElementById('mainContent');
+            contentDiv.innerHTML = ''; // Clear current content
+            
+            // Add Fade In Class
+            const container = document.createElement('div');
+            container.className = 'fade-in max-w-4xl mx-auto';
+            
+            const topic = appData.topics.find(t => t.id === tabId);
+
+            // Header
+            container.innerHTML += `
+                <div class="mb-8">
+                    <h1 class="text-3xl font-bold text-slate-900 mb-2">${topic.title}</h1>
+                    <p class="text-lg text-slate-600">${topic.intro}</p>
+                </div>
+            `;
+
+            // Render specific content based on ID
+            if (tabId === 'grammar') renderGrammarView(container, topic);
+            if (tabId === 'syntax') renderSyntaxView(container, topic);
+            if (tabId === 'abstracting') renderAbstractingView(container, topic);
+            if (tabId === 'structure') renderStructureView(container, topic);
+
+            contentDiv.appendChild(container);
+        }
+
+        // --- Specific View Renderers ---
+
+        function renderGrammarView(container, data) {
+            // Section 1: Question Plan
+            const planSection = `
+                <section class="bg-white rounded-xl shadow-sm p-6 mb-6 border border-slate-200">
+                    <h2 class="text-xl font-bold text-indigo-700 mb-4 flex items-center"><i class="fa-solid fa-circle-question mr-2"></i> ${data.content.plan.title}</h2>
+                    <p class="text-slate-700 mb-4">${data.content.plan.desc}</p>
+                    <ul class="list-disc list-inside bg-slate-50 p-4 rounded-lg text-sm text-slate-600 mb-4 space-y-1">
+                        ${data.content.plan.rules.map(r => `<li>${r}</li>`).join('')}
+                    </ul>
+                    <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4">
+                        <p class="text-xs font-bold text-indigo-400 uppercase">Пример трансформации</p>
+                        <p class="text-sm mt-1"><strong>Текст:</strong> ${data.content.plan.example.text}</p>
+                        <p class="text-sm mt-2 font-bold text-indigo-800"><i class="fa-solid fa-arrow-right mr-1"></i> ${data.content.plan.example.result}</p>
+                    </div>
+                </section>
+            `;
+
+            // Section 2: Grammar Chart & Cards
+            const grammarSection = `
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-xl shadow-sm p-6 border border-slate-200">
+                        <h2 class="text-xl font-bold text-slate-800 mb-4">Именной характер речи</h2>
+                        <p class="text-sm text-slate-500 mb-4">В научном стиле (НСР) существительные используются значительно чаще глаголов.</p>
+                        <div class="chart-container">
+                            <canvas id="posChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        ${data.content.grammar.features.map(f => `
+                            <div class="bg-white rounded-xl shadow-sm p-5 border-l-4 border-blue-500 interactive-card">
+                                <h3 class="font-bold text-slate-800">${f.type}</h3>
+                                <p class="text-sm text-slate-600 mt-1">${f.desc}</p>
+                                <div class="mt-2 text-xs bg-slate-100 p-2 rounded text-slate-500">Example: "${f.ex}"</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML += planSection + grammarSection;
+
+            // Initialize Chart after DOM update
+            setTimeout(() => {
+                const ctx = document.getElementById('posChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Существительные', 'Глаголы', 'Причастия', 'Прочее'],
+                        datasets: [{
+                            label: 'Частотность в НСР',
+                            data: [45, 15, 25, 15],
+                            backgroundColor: ['#4f46e5', '#94a3b8', '#60a5fa', '#e2e8f0'],
+                            borderRadius: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: true } }
+                    }
+                });
+            }, 50);
+        }
+
+        function renderSyntaxView(container, data) {
+            // Nominal Plan Card
+            const nomPlanHTML = `
+                <section class="bg-white rounded-xl shadow-sm p-6 mb-8 border border-slate-200">
+                    <div class="flex items-start">
+                        <div class="bg-green-100 p-3 rounded-full mr-4 text-green-600"><i class="fa-solid fa-list-ol"></i></div>
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-800">${data.content.nominalPlan.title}</h2>
+                            <p class="text-slate-600 mt-1">${data.content.nominalPlan.desc}</p>
+                            <div class="flex flex-wrap gap-2 mt-3">
+                                ${data.content.nominalPlan.features.map(f => `<span class="px-3 py-1 bg-green-50 text-green-700 text-xs rounded-full font-medium">${f}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            `;
+
+            // Interactive Transformer
+            const transformerHTML = `
+                <section>
+                    <h2 class="text-xl font-bold text-slate-800 mb-4">Тренажер: Выражение условия</h2>
+                    <p class="text-sm text-slate-500 mb-4">Нажмите на сложное предложение (с союзом «Если»), чтобы увидеть его трансформацию в простое (с предлогом «При»).</p>
+                    <div class="space-y-3">
+                        ${data.content.conditionals.map((c, idx) => `
+                            <div onclick="toggleAnswer('ans-${idx}')" class="bg-white rounded-lg shadow-sm border border-slate-200 p-4 cursor-pointer hover:bg-indigo-50 transition-colors group">
+                                <div class="flex justify-between items-center">
+                                    <p class="font-medium text-slate-700"><span class="text-red-500 font-bold">Если</span>... (Сложное)</p>
+                                    <i class="fa-solid fa-chevron-down text-slate-400 group-hover:text-indigo-500"></i>
+                                </div>
+                                <p class="text-slate-800 mt-1">${c.complex}</p>
+                                <div id="ans-${idx}" class="hidden mt-4 pt-4 border-t border-slate-100 bg-indigo-50 -mx-4 -mb-4 p-4 rounded-b-lg">
+                                    <p class="text-xs font-bold text-indigo-500 uppercase mb-1">Научный стиль (Простое)</p>
+                                    <p class="text-indigo-900 font-bold">${c.simple}</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>
+            `;
+
+            container.innerHTML += nomPlanHTML + transformerHTML;
+        }
+
+        function renderAbstractingView(container, data) {
+            // Process Flow
+            const processHTML = `
+                <section class="mb-8">
+                    <h2 class="text-xl font-bold text-slate-800 mb-4">Процесс Реферирования</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        ${data.content.process.map((p, i) => `
+                            <div class="bg-white p-4 rounded-xl shadow-sm border-t-4 border-indigo-500 relative">
+                                <div class="absolute -top-3 -right-3 w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold shadow-md">${i+1}</div>
+                                <h3 class="font-bold text-slate-800 mb-2">${p.step.split('. ')[1]}</h3>
+                                <p class="text-xs text-slate-500 leading-relaxed">${p.detail}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>
+            `;
+
+            // Chart for Types
+            const typesHTML = `
+                <section class="grid md:grid-cols-2 gap-8 items-center bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-800 mb-4">Виды Рефератов</h2>
+                        <ul class="space-y-4">
+                            <li class="flex items-start">
+                                <i class="fa-solid fa-circle text-blue-500 mt-1 mr-3 text-xs"></i>
+                                <div>
+                                    <strong class="block text-slate-800">Информативный (Конспект)</strong>
+                                    <span class="text-sm text-slate-500">Содержит основные положения, факты, выводы. Наиболее полный вид.</span>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa-solid fa-circle text-emerald-400 mt-1 mr-3 text-xs"></i>
+                                <div>
+                                    <strong class="block text-slate-800">Индикативный (Резюме)</strong>
+                                    <span class="text-sm text-slate-500">Указывает только тему и основные вопросы. Без подробностей.</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="chart-container" style="height: 250px;">
+                        <canvas id="abstractChart"></canvas>
+                    </div>
+                </section>
+            `;
+
+            container.innerHTML += processHTML + typesHTML;
+
+            setTimeout(() => {
+                const ctx = document.getElementById('abstractChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Информативный', 'Индикативный'],
+                        datasets: [{
+                            data: [70, 30], // Conceptual ratio
+                            backgroundColor: ['#3b82f6', '#34d399'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: 'bottom' } },
+                        cutout: '60%'
+                    }
+                });
+            }, 50);
+        }
+
+        function renderStructureView(container, data) {
+            // Interactive Document Model
+            const docHTML = `
+                <section class="grid lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-2">
+                        <h2 class="text-xl font-bold text-slate-800 mb-4">Структура и Клише</h2>
+                        <p class="text-sm text-slate-500 mb-4">Нажмите на раздел реферата, чтобы увидеть необходимые речевые клише.</p>
+                        
+                        <div class="space-y-4">
+                            ${data.content.sections.map((sec, idx) => `
+                                <div class="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+                                    <div onclick="toggleAnswer('cliche-${idx}')" class="p-4 bg-slate-50 border-b border-slate-100 flex justify-between items-center cursor-pointer hover:bg-white transition-colors">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold mr-3 text-sm">${idx+1}</div>
+                                            <h3 class="font-bold text-slate-800">${sec.name}</h3>
+                                        </div>
+                                        <i class="fa-solid fa-angle-down text-slate-400"></i>
+                                    </div>
+                                    <div id="cliche-${idx}" class="hidden p-4 bg-white">
+                                        <p class="text-xs text-slate-400 uppercase tracking-wider mb-2">Обязательные клише:</p>
+                                        <ul class="space-y-2">
+                                            ${sec.cliches.map(c => `<li class="text-indigo-700 font-medium italic bg-indigo-50 p-2 rounded border border-indigo-100"><i class="fa-solid fa-quote-left mr-2 text-indigo-300"></i>${c}</li>`).join('')}
+                                        </ul>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Duplicate Info Card -->
+                    <div>
+                        <div class="bg-amber-50 rounded-xl p-6 border border-amber-100 sticky top-4">
+                            <div class="text-amber-500 text-3xl mb-4"><i class="fa-solid fa-clone"></i></div>
+                            <h3 class="font-bold text-amber-900 mb-2">${data.content.duplicateInfo.title}</h3>
+                            <p class="text-sm text-amber-800 mb-4 leading-relaxed">${data.content.duplicateInfo.desc}</p>
+                            
+                            <div class="bg-white p-3 rounded border border-amber-200">
+                                <p class="text-xs text-slate-400 mb-1">Исходный текст:</p>
+                                <p class="text-sm text-slate-500 line-through mb-2">Информатика, или наука о способах обработки информации...</p>
+                                <p class="text-xs text-green-500 mb-1">В реферате:</p>
+                                <p class="text-sm font-bold text-slate-800">Информатика...</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            `;
+            container.innerHTML += docHTML;
+        }
+
+        // --- Helper: Toggle Accordion ---
+        function toggleAnswer(id) {
+            const el = document.getElementById(id);
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+                el.classList.add('fade-in');
+            } else {
+                el.classList.add('hidden');
+                el.classList.remove('fade-in');
+            }
+        }
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', init);
+
+    </script>
+</body>
+</html>
