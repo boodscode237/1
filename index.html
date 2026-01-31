@@ -30,14 +30,14 @@
             background: #94a3b8; 
         }
 
-        /* Chart Container Styling - Critical for Responsiveness */
+        /* Chart Container Styling */
         .chart-container {
             position: relative;
             width: 100%;
             max-width: 600px;
             margin-left: auto;
             margin-right: auto;
-            height: 300px; /* Mobile base */
+            height: 300px;
             max-height: 400px;
         }
         @media (min-width: 768px) {
@@ -65,14 +65,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
     </style>
-    <!-- Chosen Palette: "Academic Blue" - Slate background with Indigo/Blue accents for a focused, professional learning environment. -->
-    <!-- Application Structure Plan: Dashboard with 4 distinct tabs corresponding to the report topics. Focus on "Transformation" logic for grammar and "Structure" for abstracts. -->
-    <!-- Visualization & Content Choices: 
-         1. Bar Chart for Part of Speech frequency (Visualizing "Nominal Character").
-         2. Interactive List for Conditional Sentences (Click-to-reveal transformation).
-         3. Step Process for Abstracting.
-         4. Interactive Document Structure for Cliches.
-         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased h-screen flex flex-col overflow-hidden">
 
@@ -113,7 +105,7 @@
             </div>
         </aside>
 
-        <!-- Mobile Navigation (Bottom Bar) -->
+        <!-- Mobile Navigation -->
         <div class="md:hidden fixed bottom-0 w-full bg-white border-t border-slate-200 z-50 flex justify-around p-2" id="mobileNav">
             <!-- Mobile nav items injected by JS -->
         </div>
@@ -126,7 +118,6 @@
 
     <!-- JavaScript Logic -->
     <script>
-        // --- Data Source (Based on the provided Report) ---
         const appData = {
             topics: [
                 {
@@ -208,42 +199,46 @@
                             example: "Информатика, или наука о способах обработки информации -> Информатика"
                         }
                     }
+                },
+                {
+                    id: 'models',
+                    title: '5. Выражение-модель',
+                    icon: 'fa-language',
+                    intro: 'Основные синтаксические модели для выражения свойств и характеристик объектов. Эти конструкции являются фундаментом научного описания технологий и систем.',
+                    content: [
+                        { model: "Существительное + есть / является + Существительное", desc: "Классическая модель дефиниции или отнесения объекта к классу.", ex: "Трансформер является нейросетевой архитектурой, основанной на механизме внимания." },
+                        { model: "Существительное + обладает / имеет + Существительное", desc: "Описание внутренних параметров или функциональных возможностей.", ex: "Данный алгоритм обладает высокой вычислительной мощностью." },
+                        { model: "Существительное + характеризуется + Существительным (Тв.п.)", desc: "Акцент на специфических признаках, отличающих одну модель от другой.", ex: "Обучение с подкреплением характеризуется наличием агента и системы вознаграждений." },
+                        { model: "Существительное + Краткое прилагательное", desc: "Выражение качественного состояния или актуального свойства в сжатой форме.", ex: "Метод градиентного спуска эффективен при поиске локального минимума." },
+                        { model: "Существительное + отличается / выделяется + Существительным", desc: "Указывает на дифференциальные признаки или уникальные характеристики.", ex: "Модель Llama 3 отличается оптимизированными весами и улучшенной токенизацией." }
+                    ]
                 }
             ]
         };
 
-        // --- State Management ---
         let currentState = {
             activeTab: 'grammar'
         };
 
-        // --- Core Functions ---
-
         function init() {
             renderNav();
             loadView(currentState.activeTab);
-            
-            document.getElementById('resetBtn').addEventListener('click', () => {
-                loadView('grammar');
-            });
+            document.getElementById('resetBtn').addEventListener('click', () => loadView('grammar'));
         }
 
         function renderNav() {
             const desktopNav = document.getElementById('desktopNav');
             const mobileNav = document.getElementById('mobileNav');
-            
             desktopNav.innerHTML = '';
             mobileNav.innerHTML = '';
 
             appData.topics.forEach(topic => {
-                // Desktop
                 const dBtn = document.createElement('button');
                 dBtn.className = `w-full flex items-center p-3 rounded-lg text-sm font-medium transition-colors mb-1 ${currentState.activeTab === topic.id ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50'}`;
                 dBtn.onclick = () => loadView(topic.id);
                 dBtn.innerHTML = `<i class="fa-solid ${topic.icon} w-6"></i> ${topic.title}`;
                 desktopNav.appendChild(dBtn);
 
-                // Mobile
                 const mBtn = document.createElement('button');
                 mBtn.className = `flex flex-col items-center p-2 text-xs ${currentState.activeTab === topic.id ? 'text-indigo-600' : 'text-slate-500'}`;
                 mBtn.onclick = () => loadView(topic.id);
@@ -254,38 +249,89 @@
 
         function loadView(tabId) {
             currentState.activeTab = tabId;
-            renderNav(); // Update active states
-            
+            renderNav();
             const contentDiv = document.getElementById('mainContent');
-            contentDiv.innerHTML = ''; // Clear current content
-            
-            // Add Fade In Class
+            contentDiv.innerHTML = '';
             const container = document.createElement('div');
             container.className = 'fade-in max-w-4xl mx-auto';
-            
             const topic = appData.topics.find(t => t.id === tabId);
 
-            // Header
-            container.innerHTML += `
+            container.innerHTML = `
                 <div class="mb-8">
                     <h1 class="text-3xl font-bold text-slate-900 mb-2">${topic.title}</h1>
                     <p class="text-lg text-slate-600">${topic.intro}</p>
                 </div>
             `;
 
-            // Render specific content based on ID
             if (tabId === 'grammar') renderGrammarView(container, topic);
             if (tabId === 'syntax') renderSyntaxView(container, topic);
             if (tabId === 'abstracting') renderAbstractingView(container, topic);
             if (tabId === 'structure') renderStructureView(container, topic);
+            if (tabId === 'models') renderModelView(container, topic);
 
             contentDiv.appendChild(container);
         }
 
-        // --- Specific View Renderers ---
+        function renderModelView(container, data) {
+            const gridHTML = `
+                <div class="space-y-6">
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-indigo-600 text-white">
+                                    <th class="p-4 font-semibold">Модель / Конструкция</th>
+                                    <th class="p-4 font-semibold hidden md:table-cell">Характеристика</th>
+                                    <th class="p-4 font-semibold text-right">Действие</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${data.content.map((item, idx) => `
+                                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                                        <td class="p-4">
+                                            <div class="font-bold text-indigo-700 text-sm md:text-base">${item.model}</div>
+                                            <div class="md:hidden text-xs text-slate-500 mt-1">${item.desc}</div>
+                                        </td>
+                                        <td class="p-4 text-sm text-slate-600 hidden md:table-cell">${item.desc}</td>
+                                        <td class="p-4 text-right">
+                                            <button onclick="toggleAnswer('mod-${idx}')" class="text-indigo-500 hover:text-indigo-700 text-xs font-bold uppercase tracking-wider">
+                                                Пример <i class="fa-solid fa-chevron-down ml-1"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr id="mod-${idx}" class="hidden bg-indigo-50">
+                                        <td colspan="3" class="p-4">
+                                            <div class="flex items-start">
+                                                <div class="bg-white p-2 rounded shadow-sm mr-3 text-indigo-400">
+                                                    <i class="fa-solid fa-robot"></i>
+                                                </div>
+                                                <div>
+                                                    <p class="text-xs font-bold text-indigo-400 uppercase mb-1">Пример из области AI:</p>
+                                                    <p class="text-indigo-900 italic font-medium">"${item.ex}"</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-lg">
+                        <div class="flex">
+                            <div class="flex-shrink-0"><i class="fa-solid fa-lightbulb text-amber-400"></i></div>
+                            <div class="ml-3">
+                                <h3 class="text-sm font-bold text-amber-800 uppercase">Подсказка для контрольной</h3>
+                                <p class="text-sm text-amber-700 mt-1 italic">При описании характеристик старайтесь чередовать эти модели, чтобы избежать тавтологии и сделать текст более научным.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.innerHTML += gridHTML;
+        }
 
+        // --- Standard Renderers (From original file) ---
         function renderGrammarView(container, data) {
-            // Section 1: Question Plan
             const planSection = `
                 <section class="bg-white rounded-xl shadow-sm p-6 mb-6 border border-slate-200">
                     <h2 class="text-xl font-bold text-indigo-700 mb-4 flex items-center"><i class="fa-solid fa-circle-question mr-2"></i> ${data.content.plan.title}</h2>
@@ -301,15 +347,11 @@
                 </section>
             `;
 
-            // Section 2: Grammar Chart & Cards
             const grammarSection = `
                 <div class="grid md:grid-cols-2 gap-6">
                     <div class="bg-white rounded-xl shadow-sm p-6 border border-slate-200">
                         <h2 class="text-xl font-bold text-slate-800 mb-4">Именной характер речи</h2>
-                        <p class="text-sm text-slate-500 mb-4">В научном стиле (НСР) существительные используются значительно чаще глаголов.</p>
-                        <div class="chart-container">
-                            <canvas id="posChart"></canvas>
-                        </div>
+                        <div class="chart-container"><canvas id="posChart"></canvas></div>
                     </div>
                     <div class="space-y-4">
                         ${data.content.grammar.features.map(f => `
@@ -322,65 +364,31 @@
                     </div>
                 </div>
             `;
-
             container.innerHTML += planSection + grammarSection;
-
-            // Initialize Chart after DOM update
             setTimeout(() => {
                 const ctx = document.getElementById('posChart').getContext('2d');
                 new Chart(ctx, {
                     type: 'bar',
                     data: {
-                        labels: ['Существительные', 'Глаголы', 'Причастия', 'Прочее'],
-                        datasets: [{
-                            label: 'Частотность в НСР',
-                            data: [45, 15, 25, 15],
-                            backgroundColor: ['#4f46e5', '#94a3b8', '#60a5fa', '#e2e8f0'],
-                            borderRadius: 5
-                        }]
+                        labels: ['Сущ.', 'Глаг.', 'Прич.', 'Пр.'],
+                        datasets: [{ label: 'Частотность', data: [45, 15, 25, 15], backgroundColor: ['#4f46e5', '#94a3b8', '#60a5fa', '#e2e8f0'], borderRadius: 5 }]
                     },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
-                        scales: { y: { beginAtZero: true } }
-                    }
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
                 });
             }, 50);
         }
 
         function renderSyntaxView(container, data) {
-            // Nominal Plan Card
-            const nomPlanHTML = `
-                <section class="bg-white rounded-xl shadow-sm p-6 mb-8 border border-slate-200">
-                    <div class="flex items-start">
-                        <div class="bg-green-100 p-3 rounded-full mr-4 text-green-600"><i class="fa-solid fa-list-ol"></i></div>
-                        <div>
-                            <h2 class="text-xl font-bold text-slate-800">${data.content.nominalPlan.title}</h2>
-                            <p class="text-slate-600 mt-1">${data.content.nominalPlan.desc}</p>
-                            <div class="flex flex-wrap gap-2 mt-3">
-                                ${data.content.nominalPlan.features.map(f => `<span class="px-3 py-1 bg-green-50 text-green-700 text-xs rounded-full font-medium">${f}</span>`).join('')}
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            `;
-
-            // Interactive Transformer
+            const nomPlanHTML = `<section class="bg-white rounded-xl shadow-sm p-6 mb-8 border border-slate-200"><h2 class="text-xl font-bold text-slate-800">${data.content.nominalPlan.title}</h2><p class="text-slate-600 mt-1">${data.content.nominalPlan.desc}</p><div class="flex flex-wrap gap-2 mt-3">${data.content.nominalPlan.features.map(f => `<span class="px-3 py-1 bg-green-50 text-green-700 text-xs rounded-full font-medium">${f}</span>`).join('')}</div></section>`;
             const transformerHTML = `
                 <section>
-                    <h2 class="text-xl font-bold text-slate-800 mb-4">Тренажер: Выражение условия</h2>
-                    <p class="text-sm text-slate-500 mb-4">Нажмите на сложное предложение (с союзом «Если»), чтобы увидеть его трансформацию в простое (с предлогом «При»).</p>
+                    <h2 class="text-xl font-bold text-slate-800 mb-4">Выражение условия</h2>
                     <div class="space-y-3">
                         ${data.content.conditionals.map((c, idx) => `
                             <div onclick="toggleAnswer('ans-${idx}')" class="bg-white rounded-lg shadow-sm border border-slate-200 p-4 cursor-pointer hover:bg-indigo-50 transition-colors group">
-                                <div class="flex justify-between items-center">
-                                    <p class="font-medium text-slate-700"><span class="text-red-500 font-bold">Если</span>... (Сложное)</p>
-                                    <i class="fa-solid fa-chevron-down text-slate-400 group-hover:text-indigo-500"></i>
-                                </div>
-                                <p class="text-slate-800 mt-1">${c.complex}</p>
+                                <p class="text-slate-800 mt-1 font-medium"><span class="text-red-500">Если</span>... ${c.complex}</p>
                                 <div id="ans-${idx}" class="hidden mt-4 pt-4 border-t border-slate-100 bg-indigo-50 -mx-4 -mb-4 p-4 rounded-b-lg">
-                                    <p class="text-xs font-bold text-indigo-500 uppercase mb-1">Научный стиль (Простое)</p>
+                                    <p class="text-xs font-bold text-indigo-500 uppercase mb-1">Научный стиль:</p>
                                     <p class="text-indigo-900 font-bold">${c.simple}</p>
                                 </div>
                             </div>
@@ -388,143 +396,26 @@
                     </div>
                 </section>
             `;
-
             container.innerHTML += nomPlanHTML + transformerHTML;
         }
 
         function renderAbstractingView(container, data) {
-            // Process Flow
-            const processHTML = `
-                <section class="mb-8">
-                    <h2 class="text-xl font-bold text-slate-800 mb-4">Процесс Реферирования</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        ${data.content.process.map((p, i) => `
-                            <div class="bg-white p-4 rounded-xl shadow-sm border-t-4 border-indigo-500 relative">
-                                <div class="absolute -top-3 -right-3 w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold shadow-md">${i+1}</div>
-                                <h3 class="font-bold text-slate-800 mb-2">${p.step.split('. ')[1]}</h3>
-                                <p class="text-xs text-slate-500 leading-relaxed">${p.detail}</p>
-                            </div>
-                        `).join('')}
-                    </div>
-                </section>
-            `;
-
-            // Chart for Types
-            const typesHTML = `
-                <section class="grid md:grid-cols-2 gap-8 items-center bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-                    <div>
-                        <h2 class="text-xl font-bold text-slate-800 mb-4">Виды Рефератов</h2>
-                        <ul class="space-y-4">
-                            <li class="flex items-start">
-                                <i class="fa-solid fa-circle text-blue-500 mt-1 mr-3 text-xs"></i>
-                                <div>
-                                    <strong class="block text-slate-800">Информативный (Конспект)</strong>
-                                    <span class="text-sm text-slate-500">Содержит основные положения, факты, выводы. Наиболее полный вид.</span>
-                                </div>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fa-solid fa-circle text-emerald-400 mt-1 mr-3 text-xs"></i>
-                                <div>
-                                    <strong class="block text-slate-800">Индикативный (Резюме)</strong>
-                                    <span class="text-sm text-slate-500">Указывает только тему и основные вопросы. Без подробностей.</span>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="chart-container" style="height: 250px;">
-                        <canvas id="abstractChart"></canvas>
-                    </div>
-                </section>
-            `;
-
-            container.innerHTML += processHTML + typesHTML;
-
-            setTimeout(() => {
-                const ctx = document.getElementById('abstractChart').getContext('2d');
-                new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Информативный', 'Индикативный'],
-                        datasets: [{
-                            data: [70, 30], // Conceptual ratio
-                            backgroundColor: ['#3b82f6', '#34d399'],
-                            borderWidth: 0
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { position: 'bottom' } },
-                        cutout: '60%'
-                    }
-                });
-            }, 50);
+            const processHTML = `<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">${data.content.process.map((p, i) => `<div class="bg-white p-4 rounded-xl shadow-sm border-t-4 border-indigo-500 relative"><div class="absolute -top-3 -right-3 w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold shadow-md">${i+1}</div><h3 class="font-bold text-slate-800 mb-2">${p.step.split('. ')[1]}</h3><p class="text-xs text-slate-500 leading-relaxed">${p.detail}</p></div>`).join('')}</div>`;
+            container.innerHTML += processHTML;
         }
 
         function renderStructureView(container, data) {
-            // Interactive Document Model
-            const docHTML = `
-                <section class="grid lg:grid-cols-3 gap-8">
-                    <div class="lg:col-span-2">
-                        <h2 class="text-xl font-bold text-slate-800 mb-4">Структура и Клише</h2>
-                        <p class="text-sm text-slate-500 mb-4">Нажмите на раздел реферата, чтобы увидеть необходимые речевые клише.</p>
-                        
-                        <div class="space-y-4">
-                            ${data.content.sections.map((sec, idx) => `
-                                <div class="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
-                                    <div onclick="toggleAnswer('cliche-${idx}')" class="p-4 bg-slate-50 border-b border-slate-100 flex justify-between items-center cursor-pointer hover:bg-white transition-colors">
-                                        <div class="flex items-center">
-                                            <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold mr-3 text-sm">${idx+1}</div>
-                                            <h3 class="font-bold text-slate-800">${sec.name}</h3>
-                                        </div>
-                                        <i class="fa-solid fa-angle-down text-slate-400"></i>
-                                    </div>
-                                    <div id="cliche-${idx}" class="hidden p-4 bg-white">
-                                        <p class="text-xs text-slate-400 uppercase tracking-wider mb-2">Обязательные клише:</p>
-                                        <ul class="space-y-2">
-                                            ${sec.cliches.map(c => `<li class="text-indigo-700 font-medium italic bg-indigo-50 p-2 rounded border border-indigo-100"><i class="fa-solid fa-quote-left mr-2 text-indigo-300"></i>${c}</li>`).join('')}
-                                        </ul>
-                                    </div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-
-                    <!-- Duplicate Info Card -->
-                    <div>
-                        <div class="bg-amber-50 rounded-xl p-6 border border-amber-100 sticky top-4">
-                            <div class="text-amber-500 text-3xl mb-4"><i class="fa-solid fa-clone"></i></div>
-                            <h3 class="font-bold text-amber-900 mb-2">${data.content.duplicateInfo.title}</h3>
-                            <p class="text-sm text-amber-800 mb-4 leading-relaxed">${data.content.duplicateInfo.desc}</p>
-                            
-                            <div class="bg-white p-3 rounded border border-amber-200">
-                                <p class="text-xs text-slate-400 mb-1">Исходный текст:</p>
-                                <p class="text-sm text-slate-500 line-through mb-2">Информатика, или наука о способах обработки информации...</p>
-                                <p class="text-xs text-green-500 mb-1">В реферате:</p>
-                                <p class="text-sm font-bold text-slate-800">Информатика...</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            `;
+            const docHTML = `<div class="grid lg:grid-cols-3 gap-8"><div class="lg:col-span-2 space-y-4">${data.content.sections.map((sec, idx) => `<div class="bg-white rounded-lg border border-slate-200 overflow-hidden"><div onclick="toggleAnswer('cliche-${idx}')" class="p-4 bg-slate-50 border-b flex justify-between cursor-pointer"><h3 class="font-bold text-slate-800">${sec.name}</h3><i class="fa-solid fa-angle-down"></i></div><div id="cliche-${idx}" class="hidden p-4"><ul>${sec.cliches.map(c => `<li class="text-indigo-700 italic bg-indigo-50 p-2 mb-1 rounded border border-indigo-100">${c}</li>`).join('')}</ul></div></div>`).join('')}</div></div>`;
             container.innerHTML += docHTML;
         }
 
-        // --- Helper: Toggle Accordion ---
         function toggleAnswer(id) {
             const el = document.getElementById(id);
-            if (el.classList.contains('hidden')) {
-                el.classList.remove('hidden');
-                el.classList.add('fade-in');
-            } else {
-                el.classList.add('hidden');
-                el.classList.remove('fade-in');
-            }
+            el.classList.toggle('hidden');
+            if (!el.classList.contains('hidden')) el.classList.add('fade-in');
         }
 
-        // --- Init ---
         document.addEventListener('DOMContentLoaded', init);
-
     </script>
 </body>
 </html>
