@@ -77,7 +77,7 @@
                     <span class="font-bold text-xl tracking-tight text-slate-900">Ревизор НСР</span>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <span class="text-sm text-slate-500 hidden sm:block">Время подготовки: ~1 час</span>
+                    <span class="text-sm text-slate-500 hidden sm:block">Время подготовки: ~1.5 часа</span>
                     <button id="resetBtn" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
                         <i class="fa-solid fa-rotate-right mr-1"></i> Сброс
                     </button>
@@ -100,7 +100,7 @@
             <div class="mt-auto p-4 border-t border-slate-100">
                 <div class="bg-indigo-50 rounded-lg p-4">
                     <h4 class="text-sm font-bold text-indigo-800 mb-2">Совет:</h4>
-                    <p class="text-xs text-indigo-600" id="sidebarTip">Изучите клише для введения и заключения реферата.</p>
+                    <p class="text-xs text-indigo-600" id="sidebarTip">Изучите падежи для выражения свойств в техническом тексте.</p>
                 </div>
             </div>
         </aside>
@@ -204,14 +204,66 @@
                     id: 'models',
                     title: '5. Выражение-модель',
                     icon: 'fa-language',
-                    intro: 'Основные синтаксические модели для выражения свойств и характеристик объектов. Эти конструкции являются фундаментом научного описания технологий и систем.',
+                    intro: 'Основные синтаксические модели для выражения свойств и характеристик объектов. Эти конструкции являются фундаментом научного описания.',
                     content: [
-                        { model: "Существительное + есть / является + Существительное", desc: "Классическая модель дефиниции или отнесения объекта к классу.", ex: "Трансформер является нейросетевой архитектурой, основанной на механизме внимания." },
-                        { model: "Существительное + обладает / имеет + Существительное", desc: "Описание внутренних параметров или функциональных возможностей.", ex: "Данный алгоритм обладает высокой вычислительной мощностью." },
-                        { model: "Существительное + характеризуется + Существительным (Тв.п.)", desc: "Акцент на специфических признаках, отличающих одну модель от другой.", ex: "Обучение с подкреплением характеризуется наличием агента и системы вознаграждений." },
-                        { model: "Существительное + Краткое прилагательное", desc: "Выражение качественного состояния или актуального свойства в сжатой форме.", ex: "Метод градиентного спуска эффективен при поиске локального минимума." },
-                        { model: "Существительное + отличается / выделяется + Существительным", desc: "Указывает на дифференциальные признаки или уникальные характеристики.", ex: "Модель Llama 3 отличается оптимизированными весами и улучшенной токенизацией." }
+                        { model: "Существительное + есть / является + Существительное", desc: "Классическая модель дефиниции или отнесения объекта к классу.", ex: "Плотность является интенсивностью распределения массы по объему." },
+                        { model: "Существительное + обладает / имеет + Существительное", desc: "Описание внутренних параметров или функциональных возможностей.", ex: "Кирпич обладает высокой морозостойкостью." },
+                        { model: "Существительное + характеризуется + Существительным (Тв.п.)", desc: "Акцент на специфических признаках.", ex: "Прочность материала характеризуется пределом прочности." },
+                        { model: "Существительное + отличается / выделяется + Существительным", desc: "Указывает на дифференциальные признаки.", ex: "Эластичность отличается от упругости способностью к значительным деформациям." }
                     ]
+                },
+                {
+                    id: 'properties',
+                    title: '6. Свойства материалов',
+                    icon: 'fa-cube',
+                    intro: 'Разбор терминологии и грамматики на примере темы «Свойства материалов». Основные конструкции определений и падежные связи.',
+                    content: {
+                        grammarPoints: [
+                            { 
+                                title: "Модель определения", 
+                                desc: "В НСР определение часто строится через тире (субстантивное) или через глагол «называться».",
+                                rule: "Термин (Им.п.) — это Характеристика (Им.п.) ИЛИ Термином (Тв.п.) называется Характеристика (Им.п.)",
+                                example: "Плотность — отношение массы к объему."
+                            },
+                            { 
+                                title: "Отглагольные существительные", 
+                                desc: "Вместо глаголов используются существительные, обозначающие процесс.",
+                                rule: "Сопротивляться → Сопротивление, Проникать → Проникновение, Разрушать → Разрушение.",
+                                example: "Способность сопротивляться проникновению..."
+                            },
+                            { 
+                                title: "Родительный падеж", 
+                                desc: "Характерно нанизывание родительного падежа для уточнения объекта.",
+                                rule: "Свойство (чего?) материала изменять (что?) форму.",
+                                example: "Предел (1) прочности (2) при трех видах (3) воздействия (4)."
+                            }
+                        ],
+                        sections: [
+                            {
+                                category: "Механические свойства",
+                                items: [
+                                    { name: "Прочность", def: "Способность противостоять разрушению под воздействием внешних сил." },
+                                    { name: "Упругость", def: "Восстановление формы после удаления нагрузки." },
+                                    { name: "Пластичность", def: "Сохранение измененной формы без разрывов." },
+                                    { name: "Хрупкость", def: "Мгновенное разрушение без пластичной деформации." },
+                                    { name: "Твердость", def: "Сопротивление проникновению другого тела." }
+                                ]
+                            },
+                            {
+                                category: "Физические свойства",
+                                items: [
+                                    { name: "Плотность", def: "Отношение массы материала к его объему." },
+                                    { name: "Пористость", def: "Степень заполнения объема материала порами." },
+                                    { name: "Гигроскопичность", def: "Свойство поглощать влагу из воздуха." },
+                                    { name: "Теплопроводность", def: "Способность передавать через толщу тепловой поток." }
+                                ]
+                            }
+                        ],
+                        comparison: {
+                            title: "Эластичность vs Упругость",
+                            text: "Упругость – возврат в первичное состояние без видимых деформаций. Эластичность – возможность растягиваться, сохраняя целостность при значительных деформациях."
+                        }
+                    }
                 }
             ]
         };
@@ -236,7 +288,7 @@
                 const dBtn = document.createElement('button');
                 dBtn.className = `w-full flex items-center p-3 rounded-lg text-sm font-medium transition-colors mb-1 ${currentState.activeTab === topic.id ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50'}`;
                 dBtn.onclick = () => loadView(topic.id);
-                dBtn.innerHTML = `<i class="fa-solid ${topic.icon} w-6"></i> ${topic.title}`;
+                dBtn.innerHTML = `<i class="fa-solid ${topic.icon} w-6 text-center"></i> ${topic.title}`;
                 desktopNav.appendChild(dBtn);
 
                 const mBtn = document.createElement('button');
@@ -259,17 +311,77 @@
             container.innerHTML = `
                 <div class="mb-8">
                     <h1 class="text-3xl font-bold text-slate-900 mb-2">${topic.title}</h1>
-                    <p class="text-lg text-slate-600">${topic.intro}</p>
+                    <p class="text-lg text-slate-600 leading-relaxed">${topic.intro}</p>
                 </div>
             `;
 
             if (tabId === 'grammar') renderGrammarView(container, topic);
-            if (tabId === 'syntax') renderSyntaxView(container, topic);
-            if (tabId === 'abstracting') renderAbstractingView(container, topic);
-            if (tabId === 'structure') renderStructureView(container, topic);
-            if (tabId === 'models') renderModelView(container, topic);
+            else if (tabId === 'syntax') renderSyntaxView(container, topic);
+            else if (tabId === 'abstracting') renderAbstractingView(container, topic);
+            else if (tabId === 'structure') renderStructureView(container, topic);
+            else if (tabId === 'models') renderModelView(container, topic);
+            else if (tabId === 'properties') renderPropertiesView(container, topic);
 
             contentDiv.appendChild(container);
+        }
+
+        function renderPropertiesView(container, data) {
+            const content = data.content;
+            
+            // Grammar Block
+            let html = `
+                <section class="mb-10">
+                    <h2 class="text-xl font-bold text-indigo-900 mb-4 flex items-center">
+                        <i class="fa-solid fa-book-open mr-2"></i> Грамматика определений
+                    </h2>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        ${content.grammarPoints.map(p => `
+                            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                                <h3 class="font-bold text-indigo-700 text-sm mb-2 uppercase tracking-wide">${p.title}</h3>
+                                <p class="text-xs text-slate-500 mb-2">${p.desc}</p>
+                                <div class="bg-slate-50 p-2 rounded text-xs font-mono text-indigo-600 mb-2">${p.rule}</div>
+                                <p class="text-xs italic text-slate-700">Пример: ${p.example}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>
+            `;
+
+            // Comparison Callout
+            html += `
+                <div class="bg-indigo-600 rounded-2xl p-6 text-white mb-10 shadow-lg flex flex-col md:flex-row items-center">
+                    <div class="md:w-2/3">
+                        <h3 class="text-xl font-bold mb-2">Различие: ${content.comparison.title}</h3>
+                        <p class="text-indigo-100 text-sm italic">${content.comparison.text}</p>
+                    </div>
+                    <div class="md:w-1/3 mt-4 md:mt-0 flex justify-center">
+                        <i class="fa-solid fa-scale-balanced text-5xl text-indigo-400"></i>
+                    </div>
+                </div>
+            `;
+
+            // Categorized Lists
+            html += `<div class="grid md:grid-cols-2 gap-8">`;
+            content.sections.forEach(sec => {
+                html += `
+                    <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+                        <div class="bg-slate-800 p-4">
+                            <h3 class="text-white font-bold flex items-center"><i class="fa-solid fa-flask-vial mr-2 text-indigo-400"></i> ${sec.category}</h3>
+                        </div>
+                        <div class="p-4 space-y-4">
+                            ${sec.items.map((item, idx) => `
+                                <div class="group border-b border-slate-100 last:border-0 pb-3 last:pb-0">
+                                    <h4 class="font-bold text-indigo-600 group-hover:text-indigo-800 transition-colors">${item.name}</h4>
+                                    <p class="text-sm text-slate-600 mt-1">${item.def}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            html += `</div>`;
+
+            container.innerHTML += html;
         }
 
         function renderModelView(container, data) {
@@ -302,10 +414,10 @@
                                         <td colspan="3" class="p-4">
                                             <div class="flex items-start">
                                                 <div class="bg-white p-2 rounded shadow-sm mr-3 text-indigo-400">
-                                                    <i class="fa-solid fa-robot"></i>
+                                                    <i class="fa-solid fa-flask"></i>
                                                 </div>
                                                 <div>
-                                                    <p class="text-xs font-bold text-indigo-400 uppercase mb-1">Пример из области AI:</p>
+                                                    <p class="text-xs font-bold text-indigo-400 uppercase mb-1">Пример из физики материалов:</p>
                                                     <p class="text-indigo-900 italic font-medium">"${item.ex}"</p>
                                                 </div>
                                             </div>
@@ -315,22 +427,12 @@
                             </tbody>
                         </table>
                     </div>
-                    
-                    <div class="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-lg">
-                        <div class="flex">
-                            <div class="flex-shrink-0"><i class="fa-solid fa-lightbulb text-amber-400"></i></div>
-                            <div class="ml-3">
-                                <h3 class="text-sm font-bold text-amber-800 uppercase">Подсказка для контрольной</h3>
-                                <p class="text-sm text-amber-700 mt-1 italic">При описании характеристик старайтесь чередовать эти модели, чтобы избежать тавтологии и сделать текст более научным.</p>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             `;
             container.innerHTML += gridHTML;
         }
 
-        // --- Standard Renderers (From original file) ---
+        // --- Standard Renderers ---
         function renderGrammarView(container, data) {
             const planSection = `
                 <section class="bg-white rounded-xl shadow-sm p-6 mb-6 border border-slate-200">
@@ -386,7 +488,7 @@
                     <div class="space-y-3">
                         ${data.content.conditionals.map((c, idx) => `
                             <div onclick="toggleAnswer('ans-${idx}')" class="bg-white rounded-lg shadow-sm border border-slate-200 p-4 cursor-pointer hover:bg-indigo-50 transition-colors group">
-                                <p class="text-slate-800 mt-1 font-medium"><span class="text-red-500">Если</span>... ${c.complex}</p>
+                                <p class="text-slate-800 mt-1 font-medium"><span class="text-red-500 font-bold">Если</span>... ${c.complex}</p>
                                 <div id="ans-${idx}" class="hidden mt-4 pt-4 border-t border-slate-100 bg-indigo-50 -mx-4 -mb-4 p-4 rounded-b-lg">
                                     <p class="text-xs font-bold text-indigo-500 uppercase mb-1">Научный стиль:</p>
                                     <p class="text-indigo-900 font-bold">${c.simple}</p>
@@ -411,8 +513,10 @@
 
         function toggleAnswer(id) {
             const el = document.getElementById(id);
-            el.classList.toggle('hidden');
-            if (!el.classList.contains('hidden')) el.classList.add('fade-in');
+            if (el) {
+                el.classList.toggle('hidden');
+                if (!el.classList.contains('hidden')) el.classList.add('fade-in');
+            }
         }
 
         document.addEventListener('DOMContentLoaded', init);
