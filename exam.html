@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>НСР: Интерактивный Справочник</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #fcfaf8; /* Warm neutral */
+            color: #292524; /* Stone 800 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Merriweather', serif;
+        }
+
+        /* Chart Container Styling - MANDATORY */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+
+        .nav-item.active {
+            background-color: #e7e5e4; /* Stone 200 */
+            border-right: 4px solid #ea580c; /* Orange 600 */
+            font-weight: 600;
+        }
+
+        .construction-card {
+            transition: all 0.3s ease;
+        }
+        .construction-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d6d3d1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a29e;
+        }
+    </style>
+    <!-- Chosen Palette: Warm Stone & Academic Orange (Neutral Background #fcfaf8, Accents #ea580c, Text #292524) -->
+    <!-- Application Structure Plan: Dashboard layout with left sidebar navigation. 
+         Sections: 
+         1. Overview (General characteristics)
+         2. Object Definitions (Interactive cards for case governance)
+         3. Compression (Tabs for Plans, Annotations, Referats)
+         4. Grammar (Participle visualizers)
+         5. Quiz (Self-check).
+         Rationale: Breaks dense linguistic theory into functional, task-based modules. -->
+    <!-- Visualization & Content Choices: 
+         - Overview: Donut chart for Style traits.
+         - Definitions: Interactive cards (Grid) to map Verbs -> Cases.
+         - Grammar: Bar chart for Participle Suffix distribution (Active vs Passive).
+         - Quiz: Interactive form with immediate feedback.
+         - NO SVG/Mermaid used. Canvas/HTML only. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="flex flex-col h-screen overflow-hidden">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-stone-200 shadow-sm z-10 flex-none">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-orange-600 text-white p-2 rounded-lg font-bold text-xl">НСР</div>
+                <h1 class="text-xl font-bold text-stone-800 hidden sm:block">Научный Стиль Речи: Подготовка к тесту</h1>
+            </div>
+            <div class="text-sm text-stone-500">Интерактивный конспект</div>
+        </div>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden">
+        <!-- Sidebar Navigation -->
+        <nav class="w-64 bg-stone-50 border-r border-stone-200 flex-none hidden md:flex flex-col overflow-y-auto">
+            <div class="p-6">
+                <h3 class="text-xs font-semibold text-stone-400 uppercase tracking-wider mb-4">Разделы</h3>
+                <div class="space-y-1">
+                    <button onclick="navigate('overview')" id="nav-overview" class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm text-stone-700 hover:bg-stone-100 transition-colors active">
+                        📚 Общая характеристика
+                    </button>
+                    <button onclick="navigate('definitions')" id="nav-definitions" class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm text-stone-700 hover:bg-stone-100 transition-colors">
+                        🏗 Конструкции определения
+                    </button>
+                    <button onclick="navigate('compression')" id="nav-compression" class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm text-stone-700 hover:bg-stone-100 transition-colors">
+                        📝 Сжатие текста (Планы)
+                    </button>
+                    <button onclick="navigate('grammar')" id="nav-grammar" class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm text-stone-700 hover:bg-stone-100 transition-colors">
+                        ⚙️ Грамматика (Причастия)
+                    </button>
+                    <button onclick="navigate('quiz')" id="nav-quiz" class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm text-stone-700 hover:bg-stone-100 transition-colors">
+                        ✅ Проверь себя
+                    </button>
+                </div>
+            </div>
+            
+            <div class="mt-auto p-6 border-t border-stone-200">
+                <div class="bg-orange-50 rounded-lg p-4 border border-orange-100">
+                    <p class="text-xs text-orange-800 font-semibold mb-1">Совет:</p>
+                    <p class="text-xs text-orange-700" id="random-tip">Следи за падежами: "Является" + Т.п.!</p>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Mobile Nav Toggle (Visible only on small screens) -->
+        <div class="md:hidden fixed bottom-4 right-4 z-50">
+            <div class="bg-white rounded-full shadow-lg border border-stone-200 p-2 flex gap-2">
+                <button onclick="navigate('overview')" class="p-2 rounded-full hover:bg-stone-100 text-xl">📚</button>
+                <button onclick="navigate('definitions')" class="p-2 rounded-full hover:bg-stone-100 text-xl">🏗</button>
+                <button onclick="navigate('compression')" class="p-2 rounded-full hover:bg-stone-100 text-xl">📝</button>
+                <button onclick="navigate('grammar')" class="p-2 rounded-full hover:bg-stone-100 text-xl">⚙️</button>
+                <button onclick="navigate('quiz')" class="p-2 rounded-full hover:bg-stone-100 text-xl">✅</button>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-y-auto bg-[#fcfaf8] p-4 sm:p-8" id="main-content">
+            <!-- Dynamic Content Injected Here -->
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // --- DATA STORE ---
+        const appData = {
+            overview: {
+                title: "Характеристика Научного Стиля (НСР)",
+                intro: "Научный стиль речи (НСР) — это основной инструмент общения в академической и профессиональной среде. Главная цель этого раздела — понять ключевые черты стиля: точность, объективность и логичность, которые отличают его от разговорной или художественной речи.",
+                traits: [
+                    { label: "Точность", desc: "Употребление терминов, однозначность слов." },
+                    { label: "Логичность", desc: "Последовательное изложение, наличие причинно-следственных связей." },
+                    { label: "Объективность", desc: "Отсутствие эмоций, фокус на фактах, пассивные конструкции." },
+                    { label: "Абстрактность", desc: "Обобщение понятий, отглагольные существительные." }
+                ],
+                chartData: [30, 25, 25, 20] // Abstract percentages for visual
+            },
+            definitions: {
+                title: "Конструкции квалификации объекта",
+                intro: "В научном тексте критически важно правильно давать определения. В этом разделе собраны основные грамматические модели (клише) для описания объектов. Обратите особое внимание на падежное управление — это самая частая ошибка на экзамене.",
+                items: [
+                    { pattern: "Что (И.п.) — это Что (И.п.)", case: "Именительный (1) - Именительный (1)", example: "Информатика — это наука о способах обработки информации.", tip: "Базовое определение." },
+                    { pattern: "Что (И.п.) является Чем (Т.п.)", case: "Именительный (1) - Творительный (5)", example: "Кибернетика является основой современных систем управления.", tip: "Более книжный вариант." },
+                    { pattern: "Что (И.п.) представляет собой Что (В.п.)", case: "Именительный (1) - Винительный (4)", example: "Данная программа представляет собой сложный алгоритм.", tip: "Используется для описания состава или сущности." },
+                    { pattern: "Под Чем (Т.п.) понимается Что (И.п.)", case: "Творительный (5) - Именительный (1)", example: "Под информацией понимаются сведения об окружающем мире.", tip: "Пассивная конструкция." },
+                    { pattern: "Что (В.п.) называют Чем (Т.п.)", case: "Винительный (4) - Творительный (5)", example: "Кодированием называют процесс преобразования данных.", tip: "Определение процесса." }
+                ]
+            },
+            compression: {
+                title: "Сжатие текста: Планы и Аннотации",
+                intro: "Умение сжимать информацию — ключевой навык для написания рефератов и аннотаций. Здесь мы разберем различия между видами планов и структурой аннотаций, чтобы вы могли эффективно создавать вторичные документы.",
+                plans: {
+                    nominative: ["1. Определение кибернетики.", "2. История развития ЭВМ.", "3. Современные задачи ИТ."],
+                    question: ["1. Что изучает кибернетика?", "2. Какие этапы развития прошли ЭВМ?", "3. Какие задачи решает ИТ сегодня?"]
+                },
+                annotations: [
+                    { type: "Справочная", desc: "Сообщает факты: автор, тема, жанр. Без оценки.", color: "bg-blue-50 border-blue-200" },
+                    { type: "Рекомендательная", desc: "Оценивает, заинтересовывает, рекомендует.", color: "bg-green-50 border-green-200" }
+                ]
+            },
+            grammar: {
+                title: "Грамматика: Причастия и Пассив",
+                intro: "Причастия и пассивные конструкции делают речь «научной», позволяя избегать сложных придаточных предложений со словом «который». Этот раздел визуализирует суффиксы причастий, чтобы помочь вам быстро их идентифицировать и образовывать.",
+                suffixes: {
+                    activePresent: ["-ущ-", "-ющ-", "-ащ-", "-ящ-"],
+                    activePast: ["-вш-", "-ш-"],
+                    passivePresent: ["-ем-", "-им-"],
+                    passivePast: ["-нн-", "-енн-", "-т-"]
+                }
+            },
+            quiz: {
+                title: "Проверь себя",
+                intro: "Небольшой тест на основе советов преподавателя. Проверьте, насколько хорошо вы усвоили падежное управление и грамматические нюансы.",
+                questions: [
+                    { q: "Кибернетика _______ основой систем управления.", options: ["является", "представляет собой", "называет"], answer: 0, explanation: "Глагол 'являться' требует Творительного падежа (основой)." },
+                    { q: "Данная система _______ сложный комплекс.", options: ["является", "представляет собой", "понимается"], answer: 1, explanation: "'Представляет собой' требует Винительного падежа (комплекс)." },
+                    { q: "Какой суффикс у активного причастия настоящего времени?", options: ["-енн-", "-ющ-", "-вш-"], answer: 1, explanation: "-ущ-/-ющ- и -ащ-/-ящ- — суффиксы активных причастий настоящего времени." },
+                    { q: "Аннотация отвечает на вопрос:", options: ["Что именно написано?", "О чем текст?", "Какие выводы?"], answer: 1, explanation: "Аннотация дает общее представление (О чем?), а реферат — подробности (Что именно?)." }
+                ]
+            }
+        };
+
+        // --- RENDER FUNCTIONS ---
+
+        function renderOverview() {
+            const data = appData.overview;
+            return `
+                <div class="animate-fade-in space-y-8">
+                    <div class="bg-white rounded-xl shadow-sm p-6 border border-stone-100">
+                        <h2 class="text-3xl font-serif font-bold text-stone-800 mb-4">${data.title}</h2>
+                        <p class="text-stone-600 leading-relaxed mb-6">${data.intro}</p>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                            <div class="space-y-4">
+                                ${data.traits.map(t => `
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0 h-6 w-6 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 mt-1">✓</div>
+                                        <div class="ml-4">
+                                            <h4 class="text-lg font-medium text-stone-900">${t.label}</h4>
+                                            <p class="text-stone-500 text-sm">${t.desc}</p>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div class="chart-container bg-stone-50 rounded-xl p-4 border border-stone-100 flex flex-col items-center justify-center">
+                                <h4 class="text-center text-stone-500 text-sm mb-2 font-medium">Составляющие научного стиля</h4>
+                                <canvas id="overviewChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderDefinitions() {
+            const data = appData.definitions;
+            return `
+                <div class="animate-fade-in space-y-6">
+                    <div class="mb-6">
+                        <h2 class="text-3xl font-serif font-bold text-stone-800 mb-2">${data.title}</h2>
+                        <p class="text-stone-600">${data.intro}</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-4">
+                        ${data.items.map((item, index) => `
+                            <div class="construction-card bg-white rounded-xl border border-stone-200 p-6 cursor-pointer hover:border-orange-300 group" onclick="toggleDefinition(${index})">
+                                <div class="flex justify-between items-center mb-2">
+                                    <h3 class="text-xl font-bold text-stone-800 font-mono text-orange-700 group-hover:text-orange-600 transition-colors">${item.pattern}</h3>
+                                    <span class="text-xs font-bold px-2 py-1 bg-stone-100 text-stone-500 rounded uppercase tracking-wide">Кликни</span>
+                                </div>
+                                <div id="def-content-${index}" class="hidden mt-4 pt-4 border-t border-stone-100">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <span class="text-xs text-stone-400 uppercase font-bold">Падежи</span>
+                                            <p class="font-medium text-stone-700">${item.case}</p>
+                                        </div>
+                                        <div>
+                                            <span class="text-xs text-stone-400 uppercase font-bold">Пример</span>
+                                            <p class="italic text-stone-600 bg-stone-50 p-2 rounded border-l-2 border-orange-400">"${item.example}"</p>
+                                        </div>
+                                    </div>
+                                    <p class="mt-2 text-xs text-orange-600 font-semibold">💡 ${item.tip}</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderCompression() {
+            const data = appData.compression;
+            return `
+                <div class="animate-fade-in space-y-8">
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <h2 class="text-3xl font-serif font-bold text-stone-800 mb-2">${data.title}</h2>
+                        <p class="text-stone-600 mb-6">${data.intro}</p>
+
+                        <!-- Plans Section -->
+                        <div class="mb-10">
+                            <h3 class="text-xl font-bold text-stone-800 mb-4 flex items-center">
+                                <span class="bg-orange-100 text-orange-600 w-8 h-8 rounded-full flex items-center justify-center mr-2 text-sm">1</span>
+                                Виды Плана
+                            </h3>
+                            <div class="bg-stone-50 rounded-xl p-1 border border-stone-200 flex mb-4 max-w-sm">
+                                <button onclick="switchPlan('nominative')" id="btn-nom" class="flex-1 py-2 px-4 rounded-lg text-sm font-medium bg-white shadow-sm text-stone-800 transition-all">Назывной</button>
+                                <button onclick="switchPlan('question')" id="btn-que" class="flex-1 py-2 px-4 rounded-lg text-sm font-medium text-stone-500 hover:text-stone-700 transition-all">Вопросный</button>
+                            </div>
+                            <div class="bg-white border border-stone-200 rounded-xl p-6 relative overflow-hidden">
+                                <div class="absolute top-0 right-0 p-2 bg-stone-100 rounded-bl-xl text-xs font-mono text-stone-500" id="plan-label">СУЩЕСТВИТЕЛЬНЫЕ</div>
+                                <ul class="space-y-3" id="plan-content">
+                                    ${data.plans.nominative.map(item => `<li class="flex items-center text-stone-700"><span class="w-2 h-2 bg-stone-300 rounded-full mr-3"></span>${item}</li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Annotations Section -->
+                        <div>
+                            <h3 class="text-xl font-bold text-stone-800 mb-4 flex items-center">
+                                <span class="bg-orange-100 text-orange-600 w-8 h-8 rounded-full flex items-center justify-center mr-2 text-sm">2</span>
+                                Виды Аннотаций
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                ${data.annotations.map(a => `
+                                    <div class="${a.color} p-5 rounded-xl">
+                                        <h4 class="font-bold text-stone-800 mb-2">${a.type}</h4>
+                                        <p class="text-sm text-stone-600">${a.desc}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div class="mt-6 p-4 bg-orange-50 rounded-lg border border-orange-100">
+                                <h4 class="font-bold text-orange-800 text-sm mb-2">Дублирующая информация</h4>
+                                <p class="text-xs text-orange-700 leading-relaxed">
+                                    В рефератах нужно удалять повторы. <br>
+                                    Маркеры повтора: <b>то есть, иными словами, иначе говоря</b>. <br>
+                                    <i>Совет: Если термин известен, удаляйте всё, что идет после «то есть».</i>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderGrammar() {
+            const data = appData.grammar;
+            return `
+                <div class="animate-fade-in space-y-6">
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <h2 class="text-3xl font-serif font-bold text-stone-800 mb-2">${data.title}</h2>
+                        <p class="text-stone-600 mb-6">${data.intro}</p>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <!-- Visualizer -->
+                            <div class="chart-container">
+                                <canvas id="grammarChart"></canvas>
+                            </div>
+
+                            <!-- Reference Table -->
+                            <div class="space-y-6">
+                                <div>
+                                    <h3 class="font-bold text-stone-800 mb-3 border-b pb-2">Активные (Субъект сам)</h3>
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <div class="bg-blue-50 p-3 rounded-lg border border-blue-100">
+                                            <div class="text-xs text-blue-500 uppercase font-bold mb-1">Настоящее</div>
+                                            <div class="text-lg font-mono font-bold text-blue-700">${data.suffixes.activePresent.join(', ')}</div>
+                                            <div class="text-xs text-stone-500 mt-1">Пример: <i>Изучающий</i></div>
+                                        </div>
+                                        <div class="bg-blue-50 p-3 rounded-lg border border-blue-100">
+                                            <div class="text-xs text-blue-500 uppercase font-bold mb-1">Прошедшее</div>
+                                            <div class="text-lg font-mono font-bold text-blue-700">${data.suffixes.activePast.join(', ')}</div>
+                                            <div class="text-xs text-stone-500 mt-1">Пример: <i>Изучивший</i></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h3 class="font-bold text-stone-800 mb-3 border-b pb-2">Пассивные (Над объектом)</h3>
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <div class="bg-emerald-50 p-3 rounded-lg border border-emerald-100">
+                                            <div class="text-xs text-emerald-500 uppercase font-bold mb-1">Настоящее</div>
+                                            <div class="text-lg font-mono font-bold text-emerald-700">${data.suffixes.passivePresent.join(', ')}</div>
+                                            <div class="text-xs text-stone-500 mt-1">Пример: <i>Изучаемый</i></div>
+                                        </div>
+                                        <div class="bg-emerald-50 p-3 rounded-lg border border-emerald-100">
+                                            <div class="text-xs text-emerald-500 uppercase font-bold mb-1">Прошедшее</div>
+                                            <div class="text-lg font-mono font-bold text-emerald-700">${data.suffixes.passivePast.join(', ')}</div>
+                                            <div class="text-xs text-stone-500 mt-1">Пример: <i>Изученный</i></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8 p-4 bg-stone-100 rounded-lg">
+                            <h4 class="font-bold text-stone-800 mb-2 text-sm">Пассивная конструкция (Квалификация свойств)</h4>
+                            <div class="flex flex-col sm:flex-row items-center gap-4 text-sm">
+                                <div class="bg-white p-3 rounded border border-stone-200 flex-1 text-center text-stone-500">
+                                    Ученые <span class="font-bold text-red-500">разработали</span> метод
+                                    <br><span class="text-xs">(Актив)</span>
+                                </div>
+                                <div class="text-stone-400">➜</div>
+                                <div class="bg-white p-3 rounded border border-stone-200 flex-1 text-center text-stone-800 shadow-sm border-l-4 border-l-emerald-500">
+                                    Метод <span class="font-bold text-emerald-600">был разработан</span> учеными
+                                    <br><span class="text-xs">(Пассив - Объективность)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderQuiz() {
+            const data = appData.quiz;
+            return `
+                <div class="animate-fade-in max-w-2xl mx-auto">
+                    <div class="bg-white rounded-xl shadow-lg p-8 border border-stone-100">
+                        <div class="text-center mb-8">
+                            <h2 class="text-3xl font-serif font-bold text-stone-800 mb-2">${data.title}</h2>
+                            <p class="text-stone-600">${data.intro}</p>
+                        </div>
+                        
+                        <div class="space-y-8">
+                            ${data.questions.map((q, idx) => `
+                                <div class="quiz-item" id="q-${idx}">
+                                    <p class="font-medium text-lg text-stone-800 mb-4"><span class="text-orange-600 font-bold mr-2">${idx + 1}.</span> ${q.q}</p>
+                                    <div class="space-y-2">
+                                        ${q.options.map((opt, optIdx) => `
+                                            <button onclick="checkAnswer(${idx}, ${optIdx})" class="quiz-opt w-full text-left p-3 rounded-lg border border-stone-200 hover:bg-stone-50 transition-colors text-sm text-stone-700">
+                                                ${opt}
+                                            </button>
+                                        `).join('')}
+                                    </div>
+                                    <div id="feedback-${idx}" class="hidden mt-3 p-3 rounded-lg text-sm"></div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <div class="mt-8 text-center pt-6 border-t border-stone-100">
+                            <button onclick="navigate('overview')" class="text-orange-600 font-medium hover:text-orange-700 text-sm">Вернуться к началу</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- INTERACTION LOGIC ---
+
+        function navigate(viewId) {
+            // Update Nav UI
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('active', 'bg-stone-200', 'font-semibold');
+                if(el.id === `nav-${viewId}`) {
+                    el.classList.add('active');
+                }
+            });
+
+            // Render Content
+            const contentDiv = document.getElementById('main-content');
+            contentDiv.style.opacity = '0';
+            
+            setTimeout(() => {
+                let html = '';
+                switch(viewId) {
+                    case 'overview': html = renderOverview(); break;
+                    case 'definitions': html = renderDefinitions(); break;
+                    case 'compression': html = renderCompression(); break;
+                    case 'grammar': html = renderGrammar(); break;
+                    case 'quiz': html = renderQuiz(); break;
+                }
+                contentDiv.innerHTML = html;
+                contentDiv.style.opacity = '1';
+                contentDiv.scrollTop = 0;
+
+                // Init Chart if needed
+                if (viewId === 'overview') initOverviewChart();
+                if (viewId === 'grammar') initGrammarChart();
+
+            }, 200);
+        }
+
+        // Feature: Toggle Definition Details
+        function toggleDefinition(index) {
+            const el = document.getElementById(`def-content-${index}`);
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+            } else {
+                el.classList.add('hidden');
+            }
+        }
+
+        // Feature: Switch Plan Types
+        function switchPlan(type) {
+            const data = appData.compression.plans;
+            const content = document.getElementById('plan-content');
+            const label = document.getElementById('plan-label');
+            const btnNom = document.getElementById('btn-nom');
+            const btnQue = document.getElementById('btn-que');
+
+            if (type === 'nominative') {
+                content.innerHTML = data.nominative.map(item => `<li class="flex items-center text-stone-700"><span class="w-2 h-2 bg-stone-300 rounded-full mr-3"></span>${item}</li>`).join('');
+                label.innerText = "СУЩЕСТВИТЕЛЬНЫЕ";
+                
+                btnNom.classList.add('bg-white', 'shadow-sm', 'text-stone-800');
+                btnNom.classList.remove('text-stone-500');
+                
+                btnQue.classList.remove('bg-white', 'shadow-sm', 'text-stone-800');
+                btnQue.classList.add('text-stone-500');
+            } else {
+                content.innerHTML = data.question.map(item => `<li class="flex items-center text-stone-700"><span class="w-2 h-2 bg-orange-300 rounded-full mr-3"></span>${item}</li>`).join('');
+                label.innerText = "ВОПРОСЫ (?)";
+
+                btnQue.classList.add('bg-white', 'shadow-sm', 'text-stone-800');
+                btnQue.classList.remove('text-stone-500');
+                
+                btnNom.classList.remove('bg-white', 'shadow-sm', 'text-stone-800');
+                btnNom.classList.add('text-stone-500');
+            }
+        }
+
+        // Feature: Quiz Logic
+        function checkAnswer(qIndex, optIndex) {
+            const question = appData.quiz.questions[qIndex];
+            const feedbackEl = document.getElementById(`feedback-${qIndex}`);
+            const buttons = document.querySelectorAll(`#q-${qIndex} .quiz-opt`);
+
+            // Disable buttons
+            buttons.forEach(btn => btn.disabled = true);
+
+            if (optIndex === question.answer) {
+                // Correct
+                buttons[optIndex].classList.add('bg-green-100', 'border-green-300', 'text-green-800');
+                feedbackEl.innerHTML = `<span class="font-bold text-green-700">Правильно!</span> ${question.explanation}`;
+                feedbackEl.classList.remove('hidden', 'bg-red-50', 'text-red-700');
+                feedbackEl.classList.add('bg-green-50', 'text-green-700', 'border', 'border-green-100');
+            } else {
+                // Incorrect
+                buttons[optIndex].classList.add('bg-red-50', 'border-red-300', 'text-red-800');
+                buttons[question.answer].classList.add('bg-green-50', 'border-green-300', 'text-green-800'); // Show correct
+                feedbackEl.innerHTML = `<span class="font-bold text-red-700">Ошибка.</span> ${question.explanation}`;
+                feedbackEl.classList.remove('hidden', 'bg-green-50', 'text-green-700');
+                feedbackEl.classList.add('bg-red-50', 'text-red-700', 'border', 'border-red-100');
+            }
+        }
+
+        // --- CHARTS ---
+
+        function initOverviewChart() {
+            const ctx = document.getElementById('overviewChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Термины', 'Пассивные конструкции', 'Абстрактные сущ.', 'Общеупотр. слова'],
+                    datasets: [{
+                        data: appData.overview.chartData,
+                        backgroundColor: ['#ea580c', '#fdba74', '#fed7aa', '#f5f5f4'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 10, padding: 15, font: { size: 10 } } }
+                    }
+                }
+            });
+        }
+
+        function initGrammarChart() {
+            const ctx = document.getElementById('grammarChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Актив. Наст.', 'Актив. Прош.', 'Пассив. Наст.', 'Пассив. Прош.'],
+                    datasets: [{
+                        label: 'Кол-во суффиксов',
+                        data: [4, 2, 2, 3], // Count of suffixes in the arrays
+                        backgroundColor: ['#3b82f6', '#93c5fd', '#10b981', '#6ee7b7'],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, ticks: { stepSize: 1 } }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const map = [
+                                        appData.grammar.suffixes.activePresent.join(', '),
+                                        appData.grammar.suffixes.activePast.join(', '),
+                                        appData.grammar.suffixes.passivePresent.join(', '),
+                                        appData.grammar.suffixes.passivePast.join(', ')
+                                    ];
+                                    return map[context.dataIndex];
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- INIT ---
+        window.onload = function() {
+            navigate('overview');
+            
+            // Mobile Nav Tips Randomizer
+            const tips = [
+                "Следи за падежами: 'Является' + Т.п.!",
+                "Аннотация = О чем? Реферат = Что именно?",
+                "В реферате удаляй то, что после 'то есть'.",
+                "Активное причастие = 'ущ/ющ' или 'ащ/ящ'.",
+                "Вопросный план помогает при подготовке к ответу."
+            ];
+            document.getElementById('random-tip').innerText = tips[Math.floor(Math.random() * tips.length)];
+        };
+
+    </script>
+</body>
+</html>
