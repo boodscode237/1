@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ПОЛНЫЙ КУРС: Научный стиль речи (НСР)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        .sidebar-link:hover { background-color: rgba(59, 130, 246, 0.1); color: #2563eb; }
+        .active-link { background-color: rgba(59, 130, 246, 0.1); color: #2563eb; border-right: 4px solid #2563eb; }
+        .table-container { overflow-x: auto; margin-bottom: 1.5rem; }
+        table { width: 100%; border-collapse: collapse; background: white; border: 1px solid #e5e7eb; font-size: 0.875rem; }
+        th, td { padding: 0.75rem; border: 1px solid #e5e7eb; vertical-align: top; }
+        th { background: #f9fafb; font-weight: 700; text-align: left; }
+        .example-box { border-left: 4px solid #3b82f6; background-color: #f8fafc; padding: 1rem; margin: 1rem 0; }
+        .error-item { color: #dc2626; text-decoration: line-through; }
+        .correct-item { color: #16a34a; font-weight: 600; }
+        section { scroll-margin-top: 5rem; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Mobile Header -->
+    <header class="lg:hidden bg-white border-b p-4 sticky top-0 z-50 flex justify-between items-center shadow-sm">
+        <h1 class="font-bold text-blue-600">НСР: Полный курс</h1>
+        <button id="menuBtn" class="p-2 text-gray-600"><i class="fas fa-bars"></i></button>
+    </header>
+
+    <div class="flex">
+        <!-- Sidebar Navigation -->
+        <nav id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full lg:translate-x-0 lg:static lg:block w-72 bg-white border-r h-screen overflow-y-auto transition-transform duration-300 ease-in-out z-40 shadow-lg lg:shadow-none">
+            <div class="p-6">
+                <h2 class="text-xl font-bold text-gray-900 border-b pb-4 mb-4 uppercase text-sm tracking-widest">Содержание</h2>
+                <div class="space-y-1">
+                    <a href="#intro" class="sidebar-link block px-4 py-2 rounded-md text-sm transition-all">1. Языковые характеристики</a>
+                    <a href="#participle" class="sidebar-link block px-4 py-2 rounded-md text-sm transition-all">2. Причастный оборот</a>
+                    <a href="#ai-context" class="sidebar-link block px-4 py-2 rounded-md text-sm transition-all">3. Обороты в контексте ИИ</a>
+                    <a href="#agreement" class="sidebar-link block px-4 py-2 rounded-md text-sm transition-all">4. Согласование и ошибки</a>
+                    <a href="#types-participle" class="sidebar-link block px-4 py-2 rounded-md text-sm transition-all">5. Типы причастий</a>
+                    <a href="#qualification" class="sidebar-link block px-4 py-2 rounded-md text-sm transition-all">6. Квалификация объекта</a>
+                    <a href="#plans" class="sidebar-link block px-4 py-2 rounded-md text-sm transition-all">7. Виды плана</a>
+                    <a href="#annotations" class="sidebar-link block px-4 py-2 rounded-md text-sm transition-all">8. Аннотации</a>
+                    <a href="#referencing" class="sidebar-link block px-4 py-2 rounded-md text-sm transition-all">9. Реферирование & Сжатие</a>
+                    <a href="#concession" class="sidebar-link block px-4 py-2 rounded-md text-sm transition-all">10. Выражение уступки</a>
+                    <a href="#passive" class="sidebar-link block px-4 py-2 rounded-md text-sm transition-all">11. Пассивные конструкции</a>
+                    <a href="#parts-speech" class="sidebar-link block px-4 py-2 rounded-md text-sm transition-all">12. Части речи</a>
+                    <a href="#verbal-nouns" class="sidebar-link block px-4 py-2 rounded-md text-sm transition-all">13. Отглагольные сущ.</a>
+                </div>
+            </div>
+        </nav>
+
+        <div id="overlay" class="fixed inset-0 bg-black/50 hidden z-30 lg:hidden"></div>
+
+        <!-- Main Content -->
+        <main class="flex-1 max-w-5xl mx-auto px-6 py-12 lg:px-12 bg-white min-h-screen shadow-sm">
+            
+            <section id="intro" class="mb-12">
+                <h1 class="text-3xl font-black text-gray-900 mb-4 uppercase tracking-tighter">ПОЛНЫЙ И ИСЧЕРПЫВАЮЩИЙ КУРС ПОДГОТОВКИ К ТЕСТУ: НАУЧНЫЙ СТИЛЬ РЕЧИ (НСР)</h1>
+                <p class="mb-8 text-gray-600 italic">Этот справочник твоё основное пособие. Здесь собраны все тонкости, правила, исключения и десятки примеров для подготовки к тесту.</p>
+
+                <h2 class="text-xl font-bold mb-4 p-2 bg-blue-600 text-white rounded">1. ЯЗЫКОВЫЕ ХАРАКТЕРИСТИКИ НСР И КВАЛИФИКАЦИЯ ОБЪЕКТА</h2>
+                <p class="mb-4">Научный стиль речи (НСР) это язык науки, техники и образования. Его фундаментальные черты: точность, логичность, объективность и доказательность.</p>
+                
+                <h3 class="font-bold text-lg mb-2">1.1. Ключевые лексико-грамматические особенности</h3>
+                <ol class="list-decimal ml-6 space-y-4">
+                    <li>
+                        <strong>Терминологичность:</strong> Использование слов с фиксированным значением.
+                        <div class="example-box italic text-sm">Примеры: информатика, интерфейс, алгоритм, база данных, кибернетика, нейронная сеть, верификация, транзакция.</div>
+                    </li>
+                    <li>
+                        <strong>Номинализация (Отглагольные существительные):</strong> Вместо действия (глагола) используется процесс (существительное).
+                        <div class="example-box text-sm">
+                            <strong>Трансформация:</strong> изучать → изучение, осваивать → освоение, исследовать → исследование, хранить → хранение, преобразовывать → преобразование, получать → получение.<br>
+                            <em>Пример: «Создание новых алгоритмов обеспечивает высокую скорость».</em>
+                        </div>
+                    </li>
+                    <li>
+                        <strong>«Цепочки» родительного падежа (Chain of Genitives):</strong> Нагромождение существительных в Р.п. для уточнения смысла.
+                        <div class="example-box text-sm italic space-y-1">
+                            <p>Пример 1: «Процессы (чего?) восприятия, хранения и передачи (чего?) информации».</p>
+                            <p>Пример 2: «Разработка (чего?) методов (чего?) оценки (чего?) эффективности (чего?) функционирования (чего?) системы».</p>
+                            <p>Пример 3: «Изучение (чего?) вопросов (чего?) построения (чего?) моделей (чего?) процессов».</p>
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Настоящее вневременное время:</strong> Глаголы описывают не текущий миг, а константу.
+                        <div class="example-box text-sm">Примеры: «Сигналы содержат данные», «Энергия создаётся», «Информатика изучает законы».</div>
+                    </li>
+                    <li>
+                        <strong>Авторское «Мы» (Обобщенность):</strong> Отказ от «Я» ради объективности.
+                        <div class="example-box text-sm">Примеры: «Мы должны признать...», «Мы приходим к выводу...», «Нами установлено...», «Нам кажется целесообразным...».</div>
+                    </li>
+                    <li>
+                        <strong>Логические коннекторы (Слова-связки):</strong>
+                        <p class="text-sm mt-2"><strong>Вводные слова:</strong> следовательно, таким образом, итак, напротив, кроме того, во-первых, наконец.</p>
+                        <p class="text-sm"><strong>Фразы-переходы:</strong> теперь рассмотрим..., далее остановимся на..., перейдем к анализу....</p>
+                    </li>
+                </ol>
+            </section>
+
+            <section id="participle" class="mb-12">
+                <h2 class="text-xl font-bold mb-4 p-2 bg-blue-600 text-white rounded">Причастный оборот в русском языке</h2>
+                <p class="mb-4">Причастный оборот это причастие вместе с зависимыми словами (существительными, наречиями и т.д.). Он выполняет функцию распространённого определения и отвечает на вопрос «какой?», «какая?», «какое?», «какие?».</p>
+                <div class="example-box text-sm">
+                    <strong>Пример:</strong> Студент, читающий книгу, сдал экзамен. («читающий книгу» — причастный оборот).
+                </div>
+
+                <h3 class="font-bold mt-6 mb-2">1. Как строится причастный оборот?</h3>
+                <p class="text-sm mb-2">Причастие (главное слово) + зависимые слова в том же роде, числе и падеже, что и определяемое слово. Зависимые слова могут быть:</p>
+                <ul class="list-disc ml-6 text-sm mb-4">
+                    <li>Существительное (в косвенном падеже): читающий книгу студент.</li>
+                    <li>Наречие: громко читающий студент.</li>
+                    <li>Местоимение: встретивший меня друг.</li>
+                    <li>Инфинитив: желающий понять ученик.</li>
+                </ul>
+
+                <h3 class="font-bold mt-6 mb-2">2. Место причастного оборота и знаки препинания</h3>
+                <div class="space-y-4 text-sm">
+                    <div class="p-4 border rounded">
+                        <p class="font-bold mb-2">А. Если оборот стоит ПОСЛЕ определяемого слова (запятые ставятся):</p>
+                        <ul class="italic space-y-1">
+                            <li>— Дом, стоящий на углу, очень старый.</li>
+                            <li>— ИИ-система, анализирующая большие данные, выявила новую тенденцию.</li>
+                            <li>— Алгоритм, используемый для распознавания лиц, показал точность.</li>
+                        </ul>
+                    </div>
+                    <div class="p-4 border rounded">
+                        <p class="font-bold mb-2">Б. Если оборот стоит ПЕРЕД определяемым словом (запятая НЕ ставится):</p>
+                        <ul class="italic space-y-1">
+                            <li>— Стоящий на углу дом очень старый.</li>
+                            <li>— Обучающаяся на больших данных модель постоянно улучшает точность.</li>
+                            <li>— Предсказанный нейросетью результат оказался верным.</li>
+                        </ul>
+                    </div>
+                    <div class="p-4 bg-yellow-50 border border-yellow-200 rounded">
+                        <strong>НО:</strong> если оборот имеет добавочное обстоятельственное значение (причины, уступки) — запятые ставятся: <br>
+                        <em>«Утомлённые долгой дорогой, туристы сразу легли спать. (причина)»</em>
+                    </div>
+                    <p><strong>В. Личное местоимение:</strong> ВСЕГДА выделяется запятыми. (<em>Уставший после работы, он быстро уснул.</em>)</p>
+                    <p><strong>Г. Имя собственное:</strong> Обычно выделяется запятыми. (<em>Иван, приехавший из Москвы, поселился в гостинице.</em>)</p>
+                </div>
+            </section>
+
+            <section id="ai-context" class="mb-12">
+                <h2 class="text-xl font-bold mb-4 p-2 bg-blue-600 text-white rounded">3. Причастный vs Деепричастный оборот</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Причастный оборот</th>
+                                <th>Деепричастный оборот</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Что обозначает?</strong></td>
+                                <td>Признак предмета по действию (какой?)</td>
+                                <td>Добавочное действие (что делая? что сделав?)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Главное слово</strong></td>
+                                <td>Причастие</td>
+                                <td>Деепричастие</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Зависит от</strong></td>
+                                <td>Существительного/местоимения</td>
+                                <td>Глагола-сказуемого</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Пример</strong></td>
+                                <td>Мальчик, читающий книгу, улыбнулся.</td>
+                                <td>Читая книгу, мальчик улыбнулся.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="text-sm italic mb-6">Проверка: если можно заменить конструкцией «который + глагол» это причастный оборот.</p>
+
+                <h3 class="font-bold mb-4">Примеры в контексте ИИ:</h3>
+                <div class="grid md:grid-cols-2 gap-4 text-sm">
+                    <div class="p-4 border rounded bg-green-50">
+                        <p class="font-bold mb-2">Причастный оборот (ИИ):</p>
+                        <ul class="space-y-2 italic">
+                            <li>1. Модель, обученная на огромном массиве данных, показала высокую точность.</li>
+                            <li>2. Алгоритм, используемый для распознавания изображений, постоянно совершенствуется.</li>
+                            <li>3. Робот, выполняющий сложные операции, требует регулярного обслуживания.</li>
+                        </ul>
+                    </div>
+                    <div class="p-4 border rounded bg-blue-50">
+                        <p class="font-bold mb-2">Деепричастный оборот (ИИ):</p>
+                        <ul class="space-y-2 italic">
+                            <li>1. Анализируя входящую информацию, нейросеть принимает решение.</li>
+                            <li>2. Обработав запрос пользователя, чат-бот выдал релевантный ответ.</li>
+                            <li>3. Используя метод глубокого обучения, исследователи добились прогресса.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="agreement" class="mb-12">
+                <h2 class="text-xl font-bold mb-4 p-2 bg-blue-600 text-white rounded">4. Согласование и ошибки</h2>
+                <p class="text-sm mb-4">Причастие должно стоять в том же роде, числе и падеже, что и определяемое слово.<br>
+                <em>Пример: Я вижу девушку (Вин. п.), идущУЮ по улице. Мы гордимся студентами (Тв. п.), сдавшИМИ экзамен.</em></p>
+
+                <h3 class="font-bold mb-2">Типичные ошибки:</h3>
+                <ul class="space-y-4 text-sm">
+                    <li class="error-box p-3 border rounded">
+                        <p><strong>Ошибка 1: Разрыв причастного оборота определяемым словом</strong></p>
+                        <span class="error-item">Написанная книга известным автором.</span> → <span class="correct-item">Книга, написанная известным автором.</span>
+                    </li>
+                    <li class="error-box p-3 border rounded">
+                        <p><strong>Ошибка 2: Неправильное согласование</strong></p>
+                        <span class="error-item">Одно из чудес, созданные человеком.</span> → <span class="correct-item">Одно из чудес, созданных человеком.</span> (чудес род.п., мн.ч.)
+                    </li>
+                    <li class="error-box p-3 border rounded">
+                        <p><strong>Ошибка 3: Неверное употребление вида или времени</strong></p>
+                        <span class="error-item">Человек, читающий эту книгу вчера.</span> → <span class="correct-item">Человек, читавший эту книгу вчера.</span>
+                    </li>
+                    <li class="error-box p-3 border rounded">
+                        <p><strong>Ошибка 4: Смешение видов причастий</strong></p>
+                        <span class="error-item">Рисующий художником портрет.</span> → <span class="correct-item">Рисуемый художником портрет.</span>
+                    </li>
+                </ul>
+
+                <h3 class="font-bold mt-6 mb-2">Когда причастный оборот нельзя употреблять?</h3>
+                <p class="text-sm">Если действие не относится к определяемому слову (разные субъекты). <br>
+                <span class="error-item">Подъезжая к станции, у меня слетела шляпа.</span> (Шляпа не подъезжала). <br>
+                Нельзя использовать причастия будущего времени: <span class="error-item">Студент, сдающий экзамен завтра.</span> (Нужно: который сдаст).</p>
+            </section>
+
+            <section id="types-participle" class="mb-12">
+                <h2 class="text-xl font-bold mb-4 p-2 bg-blue-600 text-white rounded">5. Типы причастий (Примеры)</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Тип причастия</th>
+                                <th>Пример</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Действительное наст. вр.</td><td>Студенты, сдающие экзамен, волнуются.</td></tr>
+                            <tr><td>Действительное прош. вр.</td><td>Студенты, сдавшие экзамен, радуются.</td></tr>
+                            <tr><td>Страдательное наст. вр.</td><td>Экзамен, сдаваемый студентами, был трудным.</td></tr>
+                            <tr><td>Страдательное прош. вр.</td><td>Экзамен, сданный студентами, оказался лёгким.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="qualification" class="mb-12">
+                <h2 class="text-xl font-bold mb-4 p-2 bg-blue-600 text-white rounded">6. Конструкции квалификации (определения) объекта</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Модель</th>
+                                <th>Вопрос</th>
+                                <th>Падеж</th>
+                                <th>Примеры (Use cases)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>что это ЧТО</td><td>Что такое?</td><td>И.п. — И.п.</td><td>Логика это наука. ПК это инструмент.</td></tr>
+                            <tr><td>ЧТО является ЧЕМ</td><td>Чем является?</td><td>И.п. — Тв.п.</td><td>Кибернетика является основой. Данный метод является оптимальным.</td></tr>
+                            <tr><td>ЧТО представляет собой ЧТО</td><td>Что представляет собой?</td><td>И.п. — Вин.п.</td><td>Устройство представляет собой комплекс. Текст представляет собой структуру.</td></tr>
+                            <tr><td>Под ЧЕМ понимается что</td><td>Что понимается под...?</td><td>Тв.п. — И.п.</td><td>Под сетью понимается совокупность. Под кодом понимается символ.</td></tr>
+                            <tr><td>Под ЧЕМ понимают что</td><td>Что понимают под...?</td><td>Тв.п. — Вин.п.</td><td>Под файлом понимают объект. Под данными понимают сведения.</td></tr>
+                            <tr><td>ЧТО называют ЧЕМ</td><td>Что называют...?</td><td>Вин.п. — Тв.п.</td><td>Этот процесс называют кодированием. Эту фазу называют пиковой.</td></tr>
+                            <tr><td>ЧЕМ называется что</td><td>Что называется...?</td><td>Тв.п. — И.п.</td><td>Алгоритмом называется последовательность. Моделью называется описание.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="plans" class="mb-12">
+                <h2 class="text-xl font-bold mb-4 p-2 bg-blue-600 text-white rounded">7. Виды плана: Вопросный и Назывной</h2>
+                <div class="grid md:grid-cols-2 gap-8 text-sm">
+                    <div>
+                        <h3 class="font-bold mb-4 text-blue-700">Вопросный план (10 шт.)</h3>
+                        <ol class="space-y-1">
+                            <li>1. Что такое кибернетика?</li>
+                            <li>2. Какие этапы развития прошли ЭВМ?</li>
+                            <li>3. В чем заключается основной метод исследования?</li>
+                            <li>4. Как классифицируются современные сети?</li>
+                            <li>5. Каковы функции операционной системы?</li>
+                            <li>6. Кто был основоположником теории информации?</li>
+                            <li>7. Почему необходима защита данных?</li>
+                            <li>8. Каким образом происходит передача сигнала?</li>
+                            <li>9. Где применяется данная технология?</li>
+                            <li>10. Каковы перспективы развития ИИ?</li>
+                        </ol>
+                    </div>
+                    <div>
+                        <h3 class="font-bold mb-4 text-green-700">Назывной план (10 шт.)</h3>
+                        <ol class="space-y-1">
+                            <li>1. Определение и предмет кибернетики.</li>
+                            <li>2. Краткая история появления первых ЭВМ.</li>
+                            <li>3. Особенности архитектуры процессоров.</li>
+                            <li>4. Классификация видов программного обеспечения.</li>
+                            <li>5. Основные этапы разработки ПО.</li>
+                            <li>6. Методы защиты информации в сетях.</li>
+                            <li>7. Роль моделирования в науке.</li>
+                            <li>8. Понятие «искусственный интеллект».</li>
+                            <li>9. Применение ИТ в медицине.</li>
+                            <li>10. Заключение и выводы по исследованию.</li>
+                        </ol>
+                    </div>
+                </div>
+            </section>
+
+            <section id="annotations" class="mb-12">
+                <h2 class="text-xl font-bold mb-4 p-2 bg-blue-600 text-white rounded">8. Аннотации: Виды и Классификация</h2>
+                <div class="space-y-6 text-sm">
+                    <div>
+                        <h3 class="font-bold mb-2">I. По назначению и характеру</h3>
+                        <p><strong>1. Справочная (информационная):</strong> Объективно описывает содержание, без оценки. Используется в каталогах, библиографиях.</p>
+                        <p><strong>2. Рекомендательная (оценочная):</strong> Содержит оценку актуальности, новизны, советы читателю. Используется для популяризации.</p>
+                    </div>
+                    <div>
+                        <h3 class="font-bold mb-2">II. По полноте охвата</h3>
+                        <p><strong>1. Общая:</strong> Дает представление о документе в целом.</p>
+                        <p><strong>2. Аналитическая (специализированная):</strong> Описывает часть (главы) или фокусируется на конкретной проблеме.</p>
+                    </div>
+                    <div>
+                        <h3 class="font-bold mb-2">III. По способу изложения</h3>
+                        <p><strong>1. Аннотация-резюме (краткая):</strong> Суть, 50-100 слов.</p>
+                        <p><strong>2. Развернутая:</strong> Подробное представление, до 1000 знаков.</p>
+                    </div>
+                    <div>
+                        <h3 class="font-bold mb-2">IV. По форме представления:</strong> Текстовая и Телеграфная (рубрицированная).</h3>
+                    </div>
+                    <div class="p-4 bg-gray-100 rounded">
+                        <strong>Структура хорошей аннотации:</strong> <br>
+                        Библиографическое описание → Вводная часть (тип документа) → Основная часть (содержание, методы) → Заключительная часть (целевая аудитория, значимость).
+                    </div>
+                </div>
+            </section>
+
+            <section id="referencing" class="mb-12">
+                <h2 class="text-xl font-bold mb-4 p-2 bg-blue-600 text-white rounded">9. Реферирование и Компрессия</h2>
+                <h3 class="font-bold mb-2">Компрессия: Удаление дублирующей информации</h3>
+                <p class="text-sm mb-4"><strong>Дублирующая информация:</strong> части текста, где мысль повторяется другими словами. В реферате это лишнее.</p>
+                
+                <h4 class="font-bold text-sm mb-2 uppercase">Слова-подсказки (что убрать):</h4>
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="px-2 py-1 bg-gray-200 rounded text-xs">то есть</span>
+                    <span class="px-2 py-1 bg-gray-200 rounded text-xs">иначе говоря</span>
+                    <span class="px-2 py-1 bg-gray-200 rounded text-xs">другими словами</span>
+                    <span class="px-2 py-1 bg-gray-200 rounded text-xs">или (синоним)</span>
+                    <span class="px-2 py-1 bg-gray-200 rounded text-xs">это означает, что</span>
+                    <span class="px-2 py-1 bg-gray-200 rounded text-xs">как известно</span>
+                </div>
+
+                <div class="space-y-4 text-sm">
+                    <div class="p-4 border rounded italic">
+                        <strong>Пример 1:</strong> «Информатика, то есть наука о данных... изучает хранение.» <br>
+                        <strong>Реферат:</strong> «Информатика изучает хранение.»
+                    </div>
+                    <div class="p-4 border rounded italic">
+                        <strong>Пример 2:</strong> «Массив, или упорядоченный набор данных... хранится в памяти.» <br>
+                        <strong>Реферат:</strong> «Массив хранится в памяти.»
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <h3 class="font-bold mb-2">Реферат-конспект:</h3>
+                    <p class="text-sm">Наиболее сжатый вид. Фокус на основных элементах: факты, методы, результаты. Без подробностей и аргументов. <br>
+                    <strong>Структура:</strong> Введение (источник, тема) → Основная часть (факты, методы, результаты) → Заключение (обобщение, выводы автора).</p>
+                </div>
+            </section>
+
+            <section id="concession" class="mb-12">
+                <h2 class="text-xl font-bold mb-4 p-2 bg-blue-600 text-white rounded">10. Выражение уступки</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Средство связи</th>
+                                <th>Условие (Падеж)</th>
+                                <th>Примеры (Use cases)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Несмотря на</td><td>+ Винительный п.</td><td>1. Несмотря на трудность задачи... 2. Несмотря на отсутствие времени...</td></tr>
+                            <tr><td>Вопреки</td><td>+ Дательный п.</td><td>1. Вопреки прогнозам экспертов... 2. Вопреки ожиданиям ученых...</td></tr>
+                            <tr><td>Хотя</td><td>Союз (СПП)</td><td>1. Хотя технология нова, она надежна. 2. Хотя данные неполны, результат есть.</td></tr>
+                            <tr><td>Несмотря на то что</td><td>Союз (СПП)</td><td>1. Несмотря на то что код сложен, он работает. 2. Несмотря на то что тест провален...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="passive" class="mb-12">
+                <h2 class="text-xl font-bold mb-4 p-2 bg-blue-600 text-white rounded">11. Причастия и Пассивные конструкции</h2>
+                
+                <h3 class="font-bold mb-2 uppercase text-sm">Активные причастия (Настоящее время):</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr><th>Спряжение</th><th>Суффиксы</th><th>Примеры</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1-е спр.</td><td>-ущ-, -ющ-</td><td>работающий механизм, изучающий коллектив</td></tr>
+                            <tr><td>2-е спр.</td><td>-ащ-, -ящ-</td><td>говорящий факт, стоящий вопрос</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="font-bold mb-2 uppercase text-sm">Страдательные причастия:</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr><th>Время</th><th>Суффиксы</th><th>Примеры</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Настоящее</td><td>-ем-, -им-</td><td>изучаемый параметр, видимый спектр</td></tr>
+                            <tr><td>Прошедшее</td><td>-нн-, -енн-, -т-</td><td>разработанный стандарт, взятый принцип</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="font-bold mt-6 mb-2">Формы пассива в НСР:</h3>
+                <ul class="list-disc ml-6 text-sm space-y-2">
+                    <li><strong>Глаголы на -ся:</strong> «Запросы удовлетворяются автоматически». «Данные обрабатываются».</li>
+                    <li><strong>Краткие причастия:</strong> «Метод разработан специалистами». «Система настроена».</li>
+                    <li><strong>Выражение свойств (Тв.п.):</strong> «Система обладает (чем?) точностью».</li>
+                    <li><strong>Характерно/Свойственно (Д.п.):</strong> «Этому методу свойственна надежность».</li>
+                </ul>
+            </section>
+
+            <section id="parts-speech" class="mb-12">
+                <h2 class="text-xl font-bold mb-4 p-2 bg-blue-600 text-white rounded">12. Части речи в русском языке</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Часть речи</th>
+                                <th>Вопросы</th>
+                                <th>Обозначает</th>
+                                <th>Примеры</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Существительное</td><td>Кто? Что?</td><td>Предмет, лицо, явление</td><td>Книга, ученый, счастье</td></tr>
+                            <tr><td>Прилагательное</td><td>Какой? Чей?</td><td>Признак предмета</td><td>Новый, научный</td></tr>
+                            <tr><td>Числительное</td><td>Сколько? Который?</td><td>Количество, порядок</td><td>Пять, сотый, тридцать</td></tr>
+                            <tr><td>Местоимение</td><td>Кто? Какой?</td><td>Указывает, не называя</td><td>Он, мы, этот, свой</td></tr>
+                            <tr><td>Глагол</td><td>Что делать?</td><td>Действие, состояние</td><td>Изучать, быть (вкл. причастия)</td></tr>
+                            <tr><td>Наречие</td><td>Как? Где? Когда?</td><td>Признак действия</td><td>Точно, вчера, медленно</td></tr>
+                            <tr><td>Предлог</td><td>—</td><td>Связь слов</td><td>В, на, вопреки, благодаря</td></tr>
+                            <tr><td>Союз</td><td>—</td><td>Связь частей</td><td>И, но, хотя, потому что</td></tr>
+                            <tr><td>Частица</td><td>—</td><td>Смысловые оттенки</td><td>Именно, только, не, ли</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="verbal-nouns" class="mb-12">
+                <h2 class="text-xl font-bold mb-4 p-2 bg-blue-600 text-white rounded">13. Отглагольные существительные (Процесс)</h2>
+                <div class="grid md:grid-cols-2 gap-4 text-sm mb-6">
+                    <div class="p-4 border rounded">
+                        <h4 class="font-bold mb-2">Как узнать?</h4>
+                        <p>читать → чтение</p>
+                        <p>ходить → ходьба</p>
+                        <p>строить → стройка</p>
+                        <p>обсудить → обсуждение</p>
+                    </div>
+                    <div class="p-4 border rounded">
+                        <h4 class="font-bold mb-2">Суффиксы:</h4>
+                        <p>-ени-/-ани- (рисование)</p>
+                        <p>-ти- (открытие)</p>
+                        <p>-к- (погрузка)</p>
+                        <p>-б- (косьба)</p>
+                        <p>-аци- (модернизация)</p>
+                    </div>
+                </div>
+                <div class="p-4 bg-red-50 border border-red-200 rounded text-sm">
+                    <strong>Важно! Не путать:</strong> Не всё на -ение это процесс. <br>
+                    <strong>Здание</strong> — не процесс, а результат. <strong>Растение</strong> — объект. <br>
+                    <em>Проверка: Процесс чтения (да). Процесс здания (нет).</em>
+                </div>
+            </section>
+
+            <footer class="border-t pt-8 mt-12 text-center text-gray-400 text-xs">
+                ПОЛНЫЙ ЧЕК-ЛИСТ: <br>
+                Падежи: Является + Тв.п., Представляет собой + Вин.п. <br>
+                Сжатие: Удаляй всё после «то есть». <br>
+                Авторство: «Мы» и пассив.
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const menuBtn = document.getElementById('menuBtn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const sidebarLinks = document.querySelectorAll('.sidebar-link');
+
+        function toggleMenu() {
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        menuBtn.addEventListener('click', toggleMenu);
+        overlay.addEventListener('click', toggleMenu);
+
+        function setActiveLink() {
+            const sections = document.querySelectorAll('section');
+            let scrollPos = window.scrollY + 100;
+
+            sections.forEach(section => {
+                if (scrollPos >= section.offsetTop && scrollPos < section.offsetTop + section.offsetHeight) {
+                    const id = section.getAttribute('id');
+                    sidebarLinks.forEach(link => {
+                        link.classList.remove('active-link');
+                        if (link.getAttribute('href') === '#' + id) {
+                            link.classList.add('active-link');
+                        }
+                    });
+                }
+            });
+        }
+
+        window.addEventListener('scroll', setActiveLink);
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 1024) toggleMenu();
+            });
+        });
+        setActiveLink();
+    </script>
+</body>
+</html>
